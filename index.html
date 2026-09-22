@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>蟻后：地下帝國 v0.8</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#090806;color:#eee4cf;font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif}
+#app{max-width:1050px;margin:auto;min-height:100vh;background:#120e0a}.hud{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;gap:8px;padding:9px;background:#100d09ee;border-bottom:1px solid #51422d;font-size:12px}.stats{display:flex;gap:10px;flex-wrap:wrap}
+.world{height:360px;position:relative;overflow:hidden;background:linear-gradient(#344a30 0 29%,#503921 29%,#21160f 100%)}canvas{width:100%;height:100%;display:block}
+.spawn{position:absolute;font-size:29px;cursor:pointer;filter:drop-shadow(0 3px 3px #0009);animation:bob 1.8s ease-in-out infinite;touch-action:manipulation}@keyframes bob{50%{transform:translateY(-5px)}}
+.card{margin:9px;padding:11px;border:1px solid #4d3e2a;background:#1b1610;border-radius:13px}.muted{font-size:11px;color:#b5a58a}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.grow{flex:1}
+button{min-height:43px;border:1px solid #5b4932;background:#292117;color:#eee4cf;border-radius:10px;padding:8px;font-weight:650}button:disabled{opacity:.35}.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:9px}
+.hidden{display:none}.tree{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.branch{background:#15110c;border:1px solid #403522;border-radius:11px;padding:7px}.branch h3{font-size:13px;margin:2px 0 6px}.node{width:100%;text-align:left;margin:4px 0;font-size:11px}.owned{background:#40341f;border-color:#c5a75c}
+.enc{position:absolute;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:20}.encbox{width:min(90%,430px);background:#19130d;border:1px solid #806440;border-radius:16px;padding:16px;text-align:center}.encicon{font-size:58px}
+.partner{border:1px solid #4a3b27;border-radius:10px;padding:8px;margin-top:7px;background:#15110c}.skilllock{opacity:.55}.bar{height:7px;background:#30271c;border-radius:9px;overflow:hidden;margin-top:5px}.fill{height:100%;background:#bda15b}.buy{width:100%;font-size:15px}.hero{padding:8px;border:1px solid #453925;border-radius:9px;margin-top:7px;background:#15110c}
+@media(max-width:700px){.world{height:330px}.tree{grid-template-columns:1fr 1fr}.hud{font-size:10px}.tabs{grid-template-columns:repeat(2,1fr)}}
+</style></head><body><div id="app">
+<div class="hud"><div class="stats"><span>🐜 <b id="w">24</b></span><span>🛡️ <b id="s">4</b></span><span>🥚 <b id="b">6</b></span><span>🍃 <b id="l">30</b></span><span>🍄 <b id="f">80</b></span><span>🧬 <b id="p">3</b></span></div><b id="day">Day 1</b></div>
+<div class="world" id="world"><canvas id="cv"></canvas><div id="spawns"></div>
+<div style="position:absolute;left:8px;bottom:8px;background:#15110cdd;border:1px solid #57452f;border-radius:8px;padding:6px;font-size:11px">點擊地表資源／生物進行探索</div>
+<div id="encounter" class="enc hidden"><div class="encbox"><div id="eicon" class="encicon"></div><h3 id="ename"></h3><div id="edesc" class="muted"></div><div class="row" style="margin-top:12px"><button id="hunt" class="grow">⚔️ 獵殺</button><button id="ally" class="grow">🤝 嘗試共生</button><button id="leave">離開</button></div></div></div></div>
+<div class="tabs"><button data-tab="colony">蟻群</button><button data-tab="evo">帝國演化</button><button data-tab="sym">共生圖鑑</button><button data-tab="hero">特殊個體</button></div>
+
+<section id="colony" class="card"><b>蟻后與育幼</b><div class="muted">自然繁殖持續進行；也可投入菌糧擴大育幼。每次投入的成本永久上升。</div>
+<button id="boost" class="buy" style="margin-top:9px">🍄 20 → 快速培育 +10 隻</button>
+<div class="row" style="margin-top:10px"><div class="grow">兵蟻出生比例 <b id="rt">14%</b><input id="ratio" type="range" min="3" max="50" value="14" style="width:100%;accent-color:#b99c55"></div><button id="pause">暫停</button><button id="speed">×2</button></div>
+<div id="event" class="partner">工蟻開始採集，兵蟻正在巡邏。</div></section>
+
+<section id="evo" class="card hidden"><div class="row"><div class="grow"><b>帝國演化樹</b><div class="muted">一般演化 + 由共生動物解鎖的獨特技術。</div></div><b>🧬 <span id="p2">3</span></b></div><div id="tree" class="tree" style="margin-top:8px"></div></section>
+
+<section id="sym" class="card hidden"><b>共生生物</b><div class="muted">不是單純加數值。建立關係後累積共生熟練度，會開啟該物種專屬能力。</div><div id="partners"></div></section>
+
+<section id="hero" class="card hidden"><b>特殊個體</b><div class="muted">兵蟻擊殺會取得 XP 並進化；天然特殊突變仍然極罕見。</div><div id="heroes"></div></section>
+</div>
+<script>
+(()=>{const $=x=>document.getElementById(x), cv=$('cv'),ctx=cv.getContext('2d');
+let S={w:24,s:4,b:6,l:30,f:80,p:3,day:1,t:0,ratio:.14,paused:false,spd:1,dead:0,boost:20,skills:new Set(),partners:{},heroes:[],marks:new Set(),ants:[],current:null};
+const animals={
+mantis:{icon:'🦗',name:'螳螂',desc:'高速伏擊型掠食者。建立共生後可研究模仿鐮刀前足的戰鬥技巧。',hunt:20,base:.42,skill:'鐮刀斬',effect:'兵蟻有機率造成 3 倍斬擊傷害'},
+beetle:{icon:'🪲',name:'甲蟲',desc:'厚重外骨骼能成為巢口的活體盾牌。',hunt:16,base:.55,skill:'甲殼陣',effect:'遭遇天敵時降低工蟻傷亡'},
+aphid:{icon:'🐛',name:'蜜露蟲群',desc:'適合圈養的溫和昆蟲，可建立穩定蜜露牧場。',hunt:8,base:.72,skill:'蜜露牧場',effect:'每日被動產生菌糧'},
+spider:{icon:'🕷️',name:'幼蛛',desc:'危險，但若成功建立關係可成為巢口震動哨兵。',hunt:25,base:.25,skill:'蛛網警戒',effect:'提前發現大型天敵，提升防禦效率'}
+};
+const skills=[
+['q1','👑 繁殖','雙卵巢週期',1,'','產卵 +30%'],['q2','👑 繁殖','營養循環',2,'q1','快速育幼成本成長降低'],
+['f1','🍄 真菌','菌種篩選',1,'','葉片轉化 +20%'],['n1','🏗️ 巢穴','排水溝',1,'','降低暴雨傷亡'],
+['w1','⚔️ 軍事','硬化外骨骼',1,'','兵蟻戰力 +30%'],['i1','🧠 智慧','費洛蒙高速路',1,'','自動採集 +30%'],
+['xmantis','🦠 共生','鐮刀斬',3,'@mantis','螳螂限定：兵蟻爆發斬擊'],['xbeetle','🦠 共生','甲殼陣',3,'@beetle','甲蟲限定：降低戰鬥傷亡'],
+['xaphid','🦠 共生','蜜露牧場',2,'@aphid','蜜露蟲限定：持續產生菌糧'],['xspider','🦠 共生','蛛網警戒',3,'@spider','幼蛛限定：強化預警與防守']
+];
+for(let i=0;i<28;i++) S.ants.push({type:i<4?'s':'w',x:450,y:240,tx:450,ty:240});
+function msg(x){$('event').textContent=x}
+function can(k){if(S.skills.has(k[0])||S.p<k[3])return false;if(!k[4])return true;if(k[4][0]=='@'){let a=k[4].slice(1);return S.partners[a]&&S.partners[a].bond>=100}return S.skills.has(k[4])}
+function buildTree(){let g={};skills.forEach(k=>(g[k[1]]??=[]).push(k));$('tree').innerHTML=Object.entries(g).map(([b,a])=>`<div class="branch"><h3>${b}</h3>${a.map(k=>`<button id="sk${k[0]}" class="node"><b>${k[2]}</b> · ${k[3]}🧬<br><span class="muted">${k[5]}</span></button>`).join('')}</div>`).join('');skills.forEach(k=>$('sk'+k[0]).onclick=()=>{if(!can(k))return;S.p-=k[3];S.skills.add(k[0]);msg('🧬 學會：'+k[2]);ui()})}
+function spawn(){if($('spawns').children.length>9)return;let animal=Math.random()<.34,e=document.createElement('div');e.className='spawn';let obj;if(animal){let keys=Object.keys(animals),key=keys[Math.floor(Math.random()*keys.length)];obj={animal:true,key,...animals[key]};e.textContent=obj.icon}else{let r=[['🍃',7],['🌱',5],['🍓',10],['🍄',8]],q=r[Math.floor(Math.random()*r.length)];obj={animal:false,icon:q[0],v:q[1]};e.textContent=q[0]}e.style.left=5+Math.random()*88+'%';e.style.top=5+Math.random()*18+'%';$('spawns').appendChild(e);e.onclick=()=>{if(obj.animal){S.current={obj,e};showEncounter(obj)}else{S.l+=obj.v;if(obj.icon==='🍄')S.f+=obj.v;e.remove();msg('採集 '+obj.icon+'，取得額外資源。');ui()}}}
+function showEncounter(o){$('eicon').textContent=o.icon;$('ename').textContent='遭遇：'+o.name;$('edesc').textContent=o.desc;$('encounter').classList.remove('hidden')}
+function closeEnc(remove=false){if(remove&&S.current)S.current.e.remove();S.current=null;$('encounter').classList.add('hidden')}
+$('hunt').onclick=()=>{let o=S.current.obj;S.f+=o.hunt;msg('⚔️ 獵殺 '+o.name+'，取得 '+o.hunt+' 菌糧等價營養。');closeEnc(true);ui()}
+$('ally').onclick=()=>{let o=S.current.obj,bonus=S.skills.has('i1')?.08:0,ch=o.base+bonus;if(Math.random()<ch){if(!S.partners[o.key])S.partners[o.key]={count:0,bond:0};S.partners[o.key].count++;S.partners[o.key].bond=Math.min(100,S.partners[o.key].bond+35);msg('🤝 '+o.name+' 加入共生網絡！熟練度提升。')}else msg('共生失敗，'+o.name+' 離開了。');closeEnc(true);ui()}
+$('leave').onclick=()=>closeEnc(false);
+$('boost').onclick=()=>{let c=Math.floor(S.boost);if(S.f<c){msg('🍄 菌糧不足，無法擴大育幼。');return}S.f-=c;let n=S.skills.has('q1')?13:10,sol=Math.round(n*S.ratio);S.s+=sol;S.w+=n-sol;for(let i=0;i<n;i++)S.ants.push({type:i<sol?'s':'w',x:450,y:410,tx:450,ty:410});S.boost*=S.skills.has('q2')?1.22:1.38;msg('🥚 投入大量菌糧，快速培育 '+n+' 隻新生蟻。下一次成本提高。');ui()}
+function birth(){let so=Math.random()<S.ratio;if(so)S.s++;else S.w++;S.ants.push({type:so?'s':'w',x:450,y:410,tx:450,ty:410});if(Math.random()<1/50000){S.heroes.push({name:'特殊個體 '+(S.heroes.length+1),type:so?'兵蟻':'工蟻',xp:0,lv:1});msg('✦ 極罕見特殊個體羽化！')}}
+function combat(){let power=S.s*(S.skills.has('w1')?1.3:1)*(S.skills.has('xmantis')?1.22:1)*(S.skills.has('xspider')?1.15:1),enemy=6+Math.random()*25;if(power>=enemy){if(Math.random()<.25)S.p++;S.heroes.filter(h=>h.type==='兵蟻').forEach(h=>{h.xp+=5;h.lv=1+Math.floor(h.xp/20)});msg(S.skills.has('xmantis')?'⚔️ 鐮刀斬撕開天敵防線，兵蟻取得 XP。':'🛡️ 兵蟻自行擊退天敵。')}else{let loss=1+Math.floor(Math.random()*5);if(S.skills.has('xbeetle'))loss=Math.max(0,loss-2);S.w=Math.max(1,S.w-loss);S.dead+=loss;msg('⚠️ 防線被突破，死亡 '+loss+' 隻工蟻。')}}
+function sim(){if(S.paused)return;let d=.2*S.spd;S.t+=d;let gather=S.w*.004*(S.skills.has('i1')?1.3:1)*d;S.l+=gather;if(S.l>.4){let u=Math.min(S.l,S.w*.0026*d);S.l-=u;S.f+=u*(S.skills.has('f1')?1.2:.85)}if(S.skills.has('xaphid'))S.f+=.035*d*(S.partners.aphid?.count||0);let egg=.025*(S.skills.has('q1')?1.3:1)*d;if(S.f>1){S.f-=egg*.5;S.b+=egg}if(S.b>=1&&Math.random()<.16*S.spd){S.b--;birth()}Object.values(S.partners).forEach(a=>a.bond=Math.min(100,a.bond+.025*d));if(Math.random()<.0013*S.spd)combat();if(S.t>=16){S.t=0;S.day++;if(Math.random()<.85)spawn()}[[50,1],[100,1],[250,2],[500,2],[1000,3]].forEach(([n,p])=>{if(S.w+S.s>=n&&!S.marks.has(n)){S.marks.add(n);S.p+=p;msg('🏛️ 人口突破 '+n+'，獲得 '+p+' 演化點。')}});move();ui()}
+function move(){S.ants.slice(0,100).forEach((a,i)=>{if(Math.hypot(a.tx-a.x,a.ty-a.y)<8){a.tx=170+Math.random()*560;a.ty=i%4===0?110+Math.random()*20:245+Math.random()*190}a.x+=(a.tx-a.x)*.025*S.spd;a.y+=(a.ty-a.y)*.025*S.spd})}
+function draw(){let r=cv.getBoundingClientRect(),d=devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);let sx=r.width/900,sy=r.height/470;ctx.save();ctx.scale(sx,sy);ctx.strokeStyle='#765438';ctx.lineWidth=17;ctx.lineCap='round';[[450,135,450,240],[450,220,280,315],[450,220,620,315],[280,320,280,420],[620,320,620,420]].forEach(p=>{ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(p[2],p[3]);ctx.stroke()});[['育幼室',280,320,105,58],['菌圃',620,320,110,62],['王室',450,415,100,48]].forEach(q=>{ctx.fillStyle='#62472d';ctx.strokeStyle='#866541';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(q[1],q[2],q[3],q[4],0,0,7);ctx.fill();ctx.stroke();ctx.fillStyle='#d0bea0';ctx.font='13px sans-serif';ctx.textAlign='center';ctx.fillText(q[0],q[1],q[2]-q[4]+18)});S.ants.slice(0,100).forEach(a=>{ctx.fillStyle='#080503';ctx.beginPath();ctx.arc(a.x,a.y,a.type==='s'?4.3:2.6,0,7);ctx.fill()});ctx.fillStyle='#100a07';ctx.beginPath();ctx.ellipse(450,420,31,14,0,0,7);ctx.fill();ctx.restore()}
+function ui(){$('w').textContent=Math.floor(S.w);$('s').textContent=Math.floor(S.s);$('b').textContent=Math.floor(S.b);$('l').textContent=Math.floor(S.l);$('f').textContent=Math.floor(S.f);$('p').textContent=$('p2').textContent=S.p;$('day').textContent='Day '+S.day;$('rt').textContent=Math.round(S.ratio*100)+'%';$('boost').textContent='🍄 '+Math.floor(S.boost)+' → 快速培育 +'+(S.skills.has('q1')?13:10)+' 隻';skills.forEach(k=>{let e=$('sk'+k[0]);if(e){e.classList.toggle('owned',S.skills.has(k[0]));e.disabled=S.skills.has(k[0])||!can(k)}});let keys=Object.keys(S.partners);$('partners').innerHTML=keys.length?keys.map(k=>{let a=S.partners[k],o=animals[k];return `<div class="partner"><b>${o.icon} ${o.name} ×${a.count}</b><div class="muted">共生熟練 ${Math.floor(a.bond)} / 100 · 專屬技能：${o.skill}</div><div class="bar"><div class="fill" style="width:${a.bond}%"></div></div><div class="muted">${a.bond>=100?'已可在演化樹研究：'+o.effect:'繼續共生以理解牠的能力'}</div></div>`}).join(''):'<div class="partner muted">尚未建立共生。探索地表時可能遇到中立動物。</div>';$('heroes').innerHTML=S.heroes.length?S.heroes.map(h=>`<div class="hero"><b>✦ ${h.name}</b><div class="muted">${h.type} · Lv.${h.lv} · XP ${h.xp}</div></div>`).join(''):'<div class="hero muted">目前沒有特殊個體。</div>';draw()}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{['colony','evo','sym','hero'].forEach(x=>$(x).classList.add('hidden'));$(b.dataset.tab).classList.remove('hidden')});$('ratio').oninput=e=>{S.ratio=e.target.value/100;ui()};$('pause').onclick=()=>{S.paused=!S.paused;$('pause').textContent=S.paused?'繼續':'暫停'};$('speed').onclick=()=>{S.spd=S.spd===1?2:S.spd===2?4:1;$('speed').textContent='×'+S.spd};buildTree();for(let i=0;i<7;i++)spawn();setInterval(sim,200);addEventListener('resize',draw);ui()})();
+</script></body></html>
