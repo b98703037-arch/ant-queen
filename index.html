@@ -47,7 +47,54 @@ $('fight').onclick=startBattle;
 $('retreat').onclick=()=>{if(!S.battle)return;let loss=Math.min(S.s,Math.ceil(S.battle.u.filter(x=>x.side=='f'&&!x.dead).length*.08));S.s=Math.max(1,S.s-loss);msg('撤退成功，但損失 '+loss+' 隻兵蟻。');S.battle=null;$('battle').classList.add('hidden');ui()}
 function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
 function nearest(a,arr){let q=null,d=1e9;arr.forEach(b=>{let x=dist(a,b);if(x<d){d=x;q=b}});return [q,d]}
-function battleStep(){let B=S.battle;if(!B||S.paused)return;let dt=.12*S.spd;B.time+=dt;let friends=B.u.filter(x=>x.side=='f'&&!x.dead),foes=B.u.filter(x=>x.side=='e'&&!x.dead);if(!foes.length)return win();if(!friends.filter(x=>x.type!='h').length)return lose();B.u.forEach(a=>{if(a.dead)return;a.cd-=dt;if(a.type=='h'){let hurt=friends.filter(x=>x!==a&&x.hp<x.max*.9);if(hurt.length){hurt.sort((x,y)=>(x.hp/x.max)-(y.hp/y.max));let t=hurt[0],[q,d]=nearest(a,[t]);if(d>18){a.x+=(t.x-a.x)/d*a.speed*dt;a.y+=(t.y-a.y)/d*a.speed*dt}else if(a.cd<=0){t.hp=Math.min(t.max,t.hp+5);a.cd=.8}}return}let targets=a.side=='f'?foes:friends.filter(x=>x.type!='h'||friends.length<3);if(!targets.length)return;if(S.skills.has('focus')&&a.side=='f')targets.sort((x,y)=>(x.hp/x.max)-(y.hp/y.max));let [t,d]=nearest(a,targets),desired=a.range;if(d>desired){a.x+=(t.x-a.x)/d*a.speed*dt;a.y+=(t.y-a.y)/d*a.speed*dt}else if(a.cd<=0){let dmg=a.atk;if(a.side=='f'&&a.type=='m'){if(S.skills.has('surround'))dmg*=1.18;if(S.skills.has('scythe')&&Math.random()<.13)dmg*=3;if(S.skills.has('execute')&&t.hp<t.max*.3)dmg*=1.6}if(a.side=='f'&&a.type=='r'&&S.skills.has('splash')){foes.filter(z=>dist(z,t)<14).forEach(z=>z.hp-=dmg*.55)}if(a.side=='e'&&S.skills.has('shell'))dmg*=.82;if(t.side=='e'&&B.o.armor&&!S.skills.has('corrode'))dmg*=1-B.o.armor;t.hp-=dmg;if(a.type=='r')B.shots.push({x:a.x,y:a.y,tx:t.x,ty:t.y,life:.18});a.cd=a.type=='r'?.8:a.side=='e'?1.05:.65;if(S.skills.has('berserk')&&a.hp<a.max*.35)a.cd*=.65}}});if(S.skills.has('regen'))friends.forEach(a=>a.hp=Math.min(a.max,a.hp+.22*dt));if(S.skills.has('web'))foes.forEach(a=>a.cd+=.08*dt);B.u.forEach(a=>{if(a.hp<=0&&!a.dead){a.dead=true;if(a.side=='e'&&S.skills.has('blood'))friends.forEach(f=>f.hp=Math.min(f.max,f.hp+3))}});B.shots.forEach(q=>q.life-=dt);B.shots=B.shots.filter(q=>q.life>0);renderBattle()}
+function battleStep(){
+ let B=S.battle;if(!B||S.paused)return;
+ let dt=.12*S.spd;B.time+=dt;
+ let friends=B.u.filter(x=>x.side=='f'&&!x.dead);
+ let foes=B.u.filter(x=>x.side=='e'&&!x.dead);
+ if(!foes.length){win();return}
+ if(!friends.some(x=>x.type!='h')){lose();return}
+ for(const a of B.u){
+  if(a.dead)continue;a.cd-=dt;
+  if(a.type=='h'){
+   let hurt=friends.filter(x=>x!==a&&x.hp<x.max*.9);
+   if(hurt.length){
+    hurt.sort((x,y)=>(x.hp/x.max)-(y.hp/y.max));
+    let t=hurt[0],nd=nearest(a,[t]),d=nd[1];
+    if(d>18){a.x+=(t.x-a.x)/d*a.speed*dt;a.y+=(t.y-a.y)/d*a.speed*dt}
+    else if(a.cd<=0){t.hp=Math.min(t.max,t.hp+5);a.cd=.8}
+   }
+   continue;
+  }
+  let targets=a.side=='f'?foes:friends.filter(x=>x.type!='h'||friends.length<3);
+  if(!targets.length)continue;
+  if(S.skills.has('focus')&&a.side=='f')targets.sort((x,y)=>(x.hp/x.max)-(y.hp/y.max));
+  let nd=nearest(a,targets),t=nd[0],d=nd[1],desired=a.range;
+  if(d>desired){a.x+=(t.x-a.x)/d*a.speed*dt;a.y+=(t.y-a.y)/d*a.speed*dt}
+  else if(a.cd<=0){
+   let dmg=a.atk;
+   if(a.side=='f'&&a.type=='m'){
+    if(S.skills.has('surround'))dmg*=1.18;
+    if(S.skills.has('scythe')&&Math.random()<.13)dmg*=3;
+    if(S.skills.has('execute')&&t.hp<t.max*.3)dmg*=1.6;
+   }
+   if(a.side=='f'&&a.type=='r'&&S.skills.has('splash')){
+    foes.filter(z=>dist(z,t)<14).forEach(z=>{z.hp-=dmg*.55});
+   }
+   if(a.side=='e'&&S.skills.has('shell'))dmg*=.82;
+   if(t.side=='e'&&B.o.armor&&!S.skills.has('corrode'))dmg*=1-B.o.armor;
+   t.hp-=dmg;
+   if(a.type=='r')B.shots.push({x:a.x,y:a.y,tx:t.x,ty:t.y,life:.18});
+   a.cd=a.type=='r'?.8:(a.side=='e'?1.05:.65);
+   if(S.skills.has('berserk')&&a.hp<a.max*.35)a.cd*=.65;
+  }
+ }
+ if(S.skills.has('regen'))friends.forEach(a=>{a.hp=Math.min(a.max,a.hp+.22*dt)});
+ if(S.skills.has('web'))foes.forEach(a=>{a.cd+=.08*dt});
+ B.u.forEach(a=>{if(a.hp<=0&&!a.dead){a.dead=true;if(a.side=='e'&&S.skills.has('blood'))friends.forEach(f=>{f.hp=Math.min(f.max,f.hp+3)})}});
+ B.shots.forEach(q=>{q.life-=dt});B.shots=B.shots.filter(q=>q.life>0);
+ renderBattle();
+}
 function win(){let B=S.battle,o=B.o;S.tp+=o.tp;S.f+=o.food;if(o.sample&&Math.random()<.75){S.samples[o.sample]=(S.samples[o.sample]||0)+1}let dead=B.u.filter(x=>x.side=='f'&&x.dead&&x.type!='h').length;S.s=Math.max(1,S.s-Math.ceil(dead*.65));let kills=o.n,xp=Math.round((8+o.tp*4)*(S.skills.has('warxp')?1.5:1));S.heroes[0].xp+=xp;S.heroes[0].k+=kills;S.heroes[0].lv=1+Math.floor(S.heroes[0].xp/30);msg(`🏆 勝利！+${o.tp} TP、+${o.food} 菌糧${o.sample?'；取得的 '+o.sample+' 樣本 '+(S.samples[o.sample]||0)+'/3':''}`);S.battle=null;$('battle').classList.add('hidden');ui()}
 function lose(){let B=S.battle;let dead=B.u.filter(x=>x.side=='f'&&x.dead).length;S.s=Math.max(1,S.s-Math.max(2,Math.ceil(dead*.8)));msg('☠️ 狩獵隊潰敗。損失大量戰鬥蟻，沒有取得科技點。');S.battle=null;$('battle').classList.add('hidden');ui()}
 function renderBattle(){let B=S.battle;if(!B)return;$('bt').textContent=B.time.toFixed(1);field.innerHTML='';B.u.filter(x=>!x.dead).forEach(a=>{let e=document.createElement('div');e.className='unit '+(a.side=='f'?'friend':'enemy');e.style.left=a.x+'%';e.style.top=a.y+'%';let size=a.side=='e'?(B.o.boss?28:20):(a.type=='m'?13:10);e.style.width=e.style.height=size+'px';e.textContent=a.type=='r'?'•':a.type=='h'?'+':'';let h=document.createElement('span');h.className='hp';h.innerHTML=`<i style="width:${Math.max(0,a.hp/a.max*100)}%"></i>`;e.appendChild(h);field.appendChild(e)});B.shots.forEach(q=>{let e=document.createElement('i');e.className='shot';e.style.left=q.tx+'%';e.style.top=q.ty+'%';field.appendChild(e)})}
