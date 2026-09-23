@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>蟻后 REBORN v0.27.2</title>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>蟻后 REBORN v0.28</title>
 <style>*{box-sizing:border-box}body{margin:0;background:#0e120c;color:#eee6d3;font-family:-apple-system,"Noto Sans TC",sans-serif}header{position:sticky;top:0;z-index:5;background:#151a11;padding:10px;display:flex;gap:8px;overflow:auto;border-bottom:1px solid #5d5638}.p{background:#252b1d;border:1px solid #5b5b3e;border-radius:10px;padding:7px;white-space:nowrap}nav{position:fixed;bottom:0;left:0;right:0;z-index:6;background:#12160f;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:7px}button{background:#2b311f;color:#eee6d3;border:1px solid #706b48;border-radius:9px;padding:9px;font-weight:700}.page{display:none;padding:14px 14px 85px}.page.on{display:block}#worldPage{padding:0 0 75px;height:calc(100vh - 55px);position:relative}canvas{width:100%;height:100%;display:block}.hud{position:absolute;background:#11160edc;border:1px solid #625d3d;border-radius:13px;padding:10px;backdrop-filter:blur(8px)}#place{left:10px;top:10px}#colony{right:10px;top:10px;width:210px}#event{left:10px;bottom:85px;max-width:330px}.rates{display:flex;gap:4px;margin-top:6px}.rates span{background:#282c1e;padding:5px;border-radius:6px;font-size:11px}.muted{color:#aaa38f;font-size:12px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.card,.tree{background:#1b2117;border:1px solid #52543a;border-radius:13px;padding:11px}.skilltop{display:flex;gap:6px;overflow:auto;margin-bottom:10px}.trees{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:10px;min-width:720px;overflow:auto}.node{display:block;width:100%;text-align:left;margin:7px 0}.locked{opacity:.38}.max{border-color:#d8b653}.line{height:12px;border-left:2px solid #6b6240;margin-left:18px}.hero{border-left:4px solid #d87824}.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.slot{border:1px dashed #68624a;border-radius:7px;padding:5px;min-height:48px;font-size:10px}.magic{border-left:4px solid #4c83ff}.rare{border-left:4px solid #e6c63d}.set{border-left:4px solid #4bc76b}.unique{border-left:4px solid #bd8740}.charm{border-left:4px solid #a65dff}@media(max-width:700px){nav button{font-size:9px;padding:7px 1px}.hud{font-size:11px}#colony{width:175px}}.compare{display:grid;grid-template-columns:1fr 1fr;gap:6px}.good{color:#79e58b}
 .heroVisual{position:relative;height:170px;border-radius:14px;background:radial-gradient(circle at 50% 45%,#3b422b,#151a11 68%);overflow:hidden;margin:8px 0}
 .heroAnt{position:absolute;left:50%;top:50%;width:112px;height:54px;transform:translate(-50%,-50%)}
@@ -9,6 +9,12 @@
 .heroAnt .r1{top:17px;transform:rotate(215deg)}.heroAnt .r2{top:26px;transform:rotate(165deg)}.heroAnt .r3{top:34px;transform:rotate(142deg)}
 .gearMark{position:absolute;font-size:22px;filter:drop-shadow(0 0 5px #000);z-index:3}.gm-head{left:67%;top:28%}.gm-weapon{left:76%;top:48%}.gm-chest{left:46%;top:35%}.gm-amulet{left:58%;top:53%}.gm-boots{left:45%;top:68%}
 .heroNameplate{position:absolute;left:8px;top:8px;background:#0a0d09bb;border-radius:8px;padding:4px 7px;font-size:11px}
+
+#skilltop{display:flex;gap:6px;overflow-x:auto;margin:10px 0}
+#book,#heroes{display:block;min-height:100px}
+.tree{display:block;margin:12px 0;padding:10px;border:1px solid #34452d;border-radius:12px}
+.skillTier{display:block;margin:7px 0}.skillTier .node{display:block;width:100%;text-align:left}
+#heroes .hero{display:block;margin:10px 0}
 </style></head><body>
 <header><div class="p">🌿 <b id="r0">30</b></div><div class="p">🦷 顎晶 <b id="r1">1</b></div><div class="p">🎯 腺晶 <b id="r2">0</b></div><div class="p">✨ 靈質 <b id="r3">0</b></div><div class="p">🐜 <b id="pop">11</b></div><div class="p">技能 <b id="sp">1</b>/100</div></header>
 <section id="worldPage" class="page on"><canvas id="world"></canvas><div id="place" class="hud"><b id="pn"></b><div class="rates"><span id="pp0"></span><span id="pp1"></span><span id="pp2"></span><span id="pp3"></span></div><div class="muted">視野 <b id="vis"></b>m · 遠處被迷霧覆蓋</div></div><div id="colony" class="hud"><b>蟻群</b><div>工蟻 <b id="w"></b> · 兵蟻 <b id="s"></b></div><div class="muted">工蟻自動採集；點地表資源手動拾取；點生物指定攻擊。</div><button id="egg">🥚 產卵 ×10 · 🌿 <span id="ec"></span></button><div class="muted">60秒內連續產卵：10→20→40→80→160…</div></div><div id="event" class="hud">蟻后在世界邊緣建立了第一座巢穴。</div></section>
@@ -20,6 +26,7 @@
 <nav style="grid-template-columns:repeat(7,1fr)"><button data-p="worldPage">🌍世界</button><button data-p="battlePage">⚔️戰鬥</button><button data-p="skillPage">📖技能</button><button data-p="heroPage">👑英雄</button><button data-p="lootPage">💎裝備</button><button data-p="movePage">🪹遷巢</button><button data-p="statsPage">📊蟻群</button></nav>
 <script>
 const $=x=>document.getElementById(x);
+function className(c){return c==='melee'?'近戰':c==='range'?'遠距':'魔法'}
 const places=[['枯葉林緣',0,[.8,.1,.05,.05],'安全而貧瘠'],['碎石溪岸',80,[.58,.22,.15,.05],'近戰資源增加'],['高草獵場',180,[.45,.15,.3,.1],'遠距資源豐富'],['雷擊腐木',350,[.34,.16,.15,.35],'魔法資源富集'],['古樹根城',650,[.3,.25,.22,.23],'後期富饒地帶']];
 const pages={"melee":[["巨顎",[["硬化大顎",0,"強化近戰基礎傷害"],["旋風斬",4,"主動：每6秒旋轉數秒，對敵群造成AOE"],["裂甲咬擊",4,"分支：攻擊降低頭目護甲"],["戰爭踐踏",10,"主動：震擊敵軍，頭目與小兵同時受傷"],["嗜血追擊",10,"分支：敵軍減員時提高攻速"],["蟻神降臨",20,"終極：短時間全軍輸出暴增"]]],["護衛",[["甲殼強化",0,"提高英雄生命"],["兵蟻屏障",4,"降低兵蟻戰損"],["挑釁費洛蒙",4,"分支：降低英雄受到的壓力"],["血肉城牆",10,"強化兵蟻→英雄能力轉換"],["蟻海防線",10,"分支：兵蟻越多減傷越高"],["軍團共鳴",20,"終極：大幅降低軍團加成遞減率"]]],["神速",[["迅捷足節",0,"提升速度"],["二連擊",4,"追加攻擊"],["掠影",4,"分支：提高閃避與突進"],["殘影突襲",10,"爆發突襲"],["殺戮節奏",10,"分支：連殺提高輸出"],["百裂",20,"終極：高速多段群體斬擊"]]]],"range":[["酸液",[["酸液共鳴",0,"提高酸液基礎傷害"],["腐蝕彈",4,"降低敵方護甲"],["酸液散射",4,"分支：攻擊多個小兵"],["酸霧",10,"持續AOE"],["溶解標記",10,"分支：標記頭目增傷"],["溶甲洪流",20,"終極：全場酸液洪流"]]],["狙擊",[["感知觸角",0,"增加射程"],["弱點瞄準",4,"增加暴擊"],["獵首",4,"分支：對頭目增傷"],["穿透射擊",10,"穿透敵群"],["連鎖狙擊",10,"分支：擊殺後轉移目標"],["致命腺針",20,"終極：超高單體傷害"]]],["蛛絲",[["黏液絲",0,"降低敵速"],["蛛網束縛",4,"控制敵群"],["捕獵網",4,"分支：增加控制範圍"],["震動定位",10,"提高命中與視野"],["絞殺絲",10,"分支：受控敵人持續掉血"],["天羅地網",20,"終極：大範圍長時間控制"]]]],"magic":[["雷霆",[["電荷腺體",0,"提高雷傷"],["連鎖閃電",4,"彈射敵群"],["靜電場",4,"分支：削減敵軍生命"],["雷暴",10,"區域雷擊"],["超載",10,"分支：雷擊可再次觸發"],["雷神蟻",20,"終極：召喚雷域轟炸全場"]]],["烈焰",[["燃燒酸",0,"提高火傷"],["爆燃",4,"敵人死亡爆炸"],["灼熱路徑",4,"分支：留下火焰區域"],["火焰噴射",10,"持續錐形AOE"],["連環爆破",10,"分支：爆炸可連鎖"],["火海",20,"終極：整個戰場持續燃燒"]]],["生命",[["菌絲護群",0,"降低兵蟻戰損"],["戰地拖救",4,"救回兵蟻"],["共生甲殼",4,"分支：增加全軍生命"],["群體再生",10,"持續恢復"],["生命孢子",10,"分支：死亡兵蟻有機率回歸"],["靈魂寄宿",20,"終極：瀕臨全滅時重建軍團"]]]]};
 const skillScale={
@@ -79,124 +86,78 @@ function totalSkillPower(){return ['melee','range','magic'].reduce((n,c)=>n+clas
 function enemyScale(){let sp=totalSkillPower();return {lv:1+Math.floor(sp/3)+S.loc*4+(S.heroes.length-1)*5,hp:1+sp*.09+S.loc*.4,dmg:1+sp*.055+S.loc*.25}}
 function enemyAbility(tier,lv){let pool=[['厚甲','受到傷害 -30%','armor'],['猛毒','持續殺傷兵蟻','poison'],['狂暴','低血量攻速大增','rage'],['再生','持續恢復生命','regen'],['獵殺','兵蟻傷亡 +60%','slayer'],['閃避','25% 機率閃避','dodge']],n=tier==='boss'?2:tier==='champion'?1:tier==='elite'&&lv>8?1:0,out=[];while(out.length<n){let a=pool[Math.floor(Math.random()*pool.length)];if(!out.some(x=>x[2]===a[2]))out.push({name:a[0],desc:a[1],key:a[2]})}return out}
 function spawn(){let cr=Math.random()<.38,a=Math.random()*6.283,d=10+Math.random()*S.vis*.8,es=enemyScale(),rr=Math.random(),tier=cr&&S.kills>8&&rr<.025?'boss':cr&&rr<.10?'champion':cr&&rr<.28?'elite':'normal',lv=cr?es.lv+Math.floor(Math.random()*5)+({normal:0,elite:3,champion:7,boss:13}[tier]||0):1,hp=cr?(10+lv*5)*es.hp*({normal:1,elite:1.8,champion:3,boss:6}[tier]||1):1;ents.push({cr,x:50+Math.cos(a)*d,y:50+Math.sin(a)*d,hp,max:hp,tier,lv,dmg:cr?(1+lv*.12)*es.dmg:0,minions:cr?Math.max(2,Math.floor(lv/3)+({normal:2,elite:4,champion:7,boss:12}[tier]||0)):0,minionMax:cr?Math.max(2,Math.floor(lv/3)+({normal:2,elite:4,champion:7,boss:12}[tier]||0)):0,abilities:cr?enemyAbility(tier,lv):[],name:cr?['蟑螂','蜘蛛','甲蟲','螳螂','蜈蚣'][Math.min(4,S.loc+Math.floor(Math.random()*2))]:'資源'})}
-function lootRoll(tier='normal',enemyLv=1){let boost=tier==='boss'?.08:tier==='champion'?.035:tier==='elite'?.015:0,r=Math.random()-boost,rar=r<.006?'unique':r<.018?'set':r<.04?'charm':r<.10?'rare':r<.24?'magic':null;if(!rar)return;let slots=['頭盔','胸甲','武器','副手','腰帶','手套','鞋子','護身符','戒指1','戒指2'],n={magic:'魔法',rare:'稀有',set:'套裝',unique:'暗金',charm:'護符'},slot=rar==='charm'?'巢穴':slots[Math.floor(Math.random()*slots.length)],count=rar==='magic'?1:rar==='rare'?2:rar==='unique'?3:rar==='set'?2:1,stats={};for(let i=0;i<count;i++){let k=['atk','hp','crit','spd'][Math.floor(Math.random()*4)],v=k==='hp'?5+Math.floor(Math.random()*16):k==='spd'?.03+Math.random()*.07:1+Math.floor(Math.random()*5);stats[k]=(stats[k]||0)+v}let pctStats={};if((rar==='rare'||rar==='unique'||rar==='set')&&Math.random()<.55){let pk=['atk','hp','crit','spd'][Math.floor(Math.random()*4)];pctStats[pk]=2+Math.floor(Math.random()*9)}
-let quality=Math.max(1,Math.floor(enemyLv/5)+({normal:0,elite:2,champion:4,boss:8}[tier]||0));
-Object.keys(stats).forEach(k=>stats[k]=Math.round(stats[k]*(1+quality*.08)*100)/100);
-Object.keys(pctStats).forEach(k=>pctStats[k]=Math.round(pctStats[k]*(1+quality*.05)*100)/100);
-let o={rar,name:n[rar]+'·'+['蟻顎','甲片','觸角','菌絲'][Math.floor(Math.random()*4)],slot,stats,pctStats,quality};S.loot.unshift(o);log('💎 '+o.name+' 掉落')}
+function lootRoll(tier='normal',enemyLv=1){
+ // D2-inspired affix system: item level gates stronger affix tiers; magic=1–2 affixes, rare=3–6.
+ let ilvl=Math.max(1,enemyLv+({normal:0,elite:3,champion:6,boss:12}[tier]||0));
+ let chance=Math.random(),rar=chance<.012?'unique':chance<.035?'set':chance<.09?'charm':chance<.28?'rare':'magic';
+ let slots=['頭盔','胸甲','武器','副手','腰帶','手套','鞋子','護身符','戒指1','戒指2'],slot=slots[Math.floor(Math.random()*slots.length)];
+ let bases={頭盔:'甲殼冠',胸甲:'幾丁胸甲',武器:'巨顎刃',副手:'顎盾',腰帶:'菌絲束帶',手套:'鉤爪',鞋子:'疾行足甲',護身符:'費洛蒙墜飾',戒指1:'樹脂環',戒指2:'樹脂環'};
+ let prefixes=[
+  {n:'鋒利的',min:1,types:['武器','手套'],stat:'atk',flat:2,step:1.7},
+  {n:'殘酷的',min:12,types:['武器'],stat:'atkPct',pct:8,step:2.5},
+  {n:'堅固的',min:1,types:['頭盔','胸甲','副手','腰帶'],stat:'hp',flat:10,step:7},
+  {n:'巨人的',min:18,types:['頭盔','胸甲','腰帶'],stat:'hpPct',pct:7,step:2},
+  {n:'迅捷的',min:8,types:['鞋子','手套','武器'],stat:'spdPct',pct:3,step:1.2},
+  {n:'精準的',min:10,types:['武器','護身符','戒指1','戒指2'],stat:'crit',flat:2,step:.7},
+  {n:'戰士的',min:22,types:['武器','頭盔','護身符'],stat:'meleePct',pct:8,step:2},
+  {n:'獵人的',min:22,types:['武器','手套','護身符'],stat:'rangePct',pct:8,step:2},
+  {n:'秘法的',min:22,types:['頭盔','護身符','戒指1','戒指2'],stat:'magicPct',pct:8,step:2},
+  {n:'蟻后的',min:35,types:slots,stat:'allPct',pct:5,step:1.5}
+ ];
+ let suffixes=[
+  {n:'之力量',min:1,types:slots,stat:'atk',flat:1,step:1.2},
+  {n:'之生命',min:1,types:slots,stat:'hp',flat:8,step:5},
+  {n:'之屠戮',min:15,types:['武器','手套','戒指1','戒指2'],stat:'crit',flat:2,step:.6},
+  {n:'之疾風',min:12,types:['鞋子','手套','武器'],stat:'spdPct',pct:4,step:1},
+  {n:'之吸血',min:20,types:['武器','護身符','戒指1','戒指2'],stat:'leech',pct:2,step:.55},
+  {n:'之荊棘',min:16,types:['胸甲','副手','腰帶'],stat:'thorns',flat:3,step:1.5},
+  {n:'之抗性',min:18,types:slots,stat:'resAll',flat:4,step:1.2},
+  {n:'之尋寶',min:20,types:['頭盔','鞋子','護身符','戒指1','戒指2'],stat:'mf',flat:5,step:2},
+  {n:'之技能',min:30,types:['頭盔','護身符','武器'],stat:'skill',flat:1,step:.12}
+ ];
+ function pool(arr){let a=arr.filter(x=>ilvl>=x.min&&x.types.includes(slot));return a.length?a:null}
+ function rollAffix(a){
+   let tierLv=Math.max(0,Math.floor((ilvl-a.min)/8)),v;
+   if(a.flat!=null)v=Math.round((a.flat+tierLv*a.step)*10)/10;
+   else v=Math.round((a.pct+tierLv*a.step)*10)/10;
+   return {...a,v,tier:tierLv+1}
+ }
+ let aff=[],pre=pool(prefixes),suf=pool(suffixes),target=rar==='magic'?(Math.random()<.45?1:2):rar==='rare'?3+Math.floor(Math.random()*4):rar==='unique'?5:rar==='set'?4:rar==='charm'?2:1;
+ while(aff.length<target){
+   let source=aff.length%2===0?pre:suf;if(!source)source=pre||suf;if(!source)break;
+   let a=rollAffix(source[Math.floor(Math.random()*source.length)]);
+   if(!aff.some(x=>x.n===a.n))aff.push(a);else if(aff.length>=((pre?.length||0)+(suf?.length||0)))break
+ }
+ let stats={},pctStats={},special=[];
+ aff.forEach(a=>{
+   if(a.stat==='atk'||a.stat==='hp'||a.stat==='crit'||a.stat==='thorns'||a.stat==='resAll'||a.stat==='mf'||a.stat==='skill')stats[a.stat]=(stats[a.stat]||0)+a.v;
+   else if(a.stat==='atkPct')pctStats.atk=(pctStats.atk||0)+a.v;
+   else if(a.stat==='hpPct')pctStats.hp=(pctStats.hp||0)+a.v;
+   else if(a.stat==='spdPct')pctStats.spd=(pctStats.spd||0)+a.v;
+   else special.push({key:a.stat,value:a.v})
+ });
+ let quality=Math.max(1,Math.floor(ilvl/5));
+ let rareNames=['腐葉','黑顎','深根','血菌','雷痕','夜獵','王巢','枯木'];
+ let setNames=['掠奪者','菌園守衛','雷巢祭司'];
+ let uniqueNames=['碎星巨顎','不朽蟻后甲','雷神觸角冠','萬軍費洛蒙'];
+ let name;
+ if(rar==='rare')name=rareNames[Math.floor(Math.random()*rareNames.length)]+' '+rareNames[Math.floor(Math.random()*rareNames.length)]+' '+bases[slot];
+ else if(rar==='set')name=setNames[Math.floor(Math.random()*setNames.length)]+'之'+bases[slot];
+ else if(rar==='unique')name=uniqueNames[Math.floor(Math.random()*uniqueNames.length)];
+ else name=(aff[0]?.n||'')+bases[slot]+(aff[1]?.n||'');
+ let o={rar,name,slot,stats,pctStats,special,affixes:aff,quality,ilvl};
+ S.loot.push(o);log('💎 掉落 '+name+'（ilvl '+ilvl+'）')
+}
 function equipItem(i,hi){let o=S.loot[i],hero=S.heroes[hi];if(!o||!hero||o.rar==='charm')return;S.heroes.forEach(h=>Object.keys(h.e||{}).forEach(s=>{if(h.e[s]===o)delete h.e[s]}));hero.e[o.slot]=o;log('🛡️ '+o.name+' 裝備給 '+hero.name);renderLoot();renderHeroes();ui()}
-function statText(o){let names={atk:'攻擊',hp:'生命',crit:'暴擊',spd:'速度'},a=Object.entries(o.stats||{}).map(([k,v])=>`${names[k]} +${k==='spd'?(Math.round(v*100)/100):v} [固定]`),b=Object.entries(o.pctStats||{}).map(([k,v])=>`${names[k]} +${v}% [百分比]`);return a.concat(b).join(' · ')}
-function armyBonus(){let n=S.s,base=Math.min(.85,.12*Math.log(1+n/7)),mastery=(S.sk['melee:護衛:3']||0)*.006;return Math.min(1.15,base*(1+mastery))}
-function heroStats(hero,item=null){
- let base=hero.base||{atk:10,hp:100,spd:1,crit:5},o={...base},flat={atk:0,hp:0,spd:0,crit:0},pct={atk:0,hp:0,spd:0,crit:0};
- let eq=Object.entries(hero.e||{}).filter(([slot])=>!item||slot!==item.slot).map(([,v])=>v);if(item)eq.push(item);
- eq.forEach(q=>{if(!q)return;Object.entries(q.stats||{}).forEach(([k,v])=>flat[k]=(flat[k]||0)+v);Object.entries(q.pctStats||{}).forEach(([k,v])=>pct[k]=(pct[k]||0)+v)});
- if(hero.c==='melee'){
-   flat.atk+=(S.sk['melee:巨顎:0']||0)*10;
-   flat.hp+=(S.sk['melee:護衛:0']||0)*20;
-   pct.spd+=(S.sk['melee:神速:0']||0)*3;
-   pct.crit+=(S.sk['melee:神速:1']||0)*2;
+function statText(o){
+ if(o.affixes&&o.affixes.length){
+  let labels={atk:'傷害',hp:'生命',crit:'暴擊率',atkPct:'傷害',hpPct:'生命',spdPct:'攻擊/移動速度',leech:'生命偷取',thorns:'反傷',resAll:'全抗性',mf:'尋寶率',skill:'技能等級',meleePct:'近戰技能傷害',rangePct:'遠距技能傷害',magicPct:'魔法技能傷害',allPct:'所有傷害'};
+  return '<div class="muted">物品等級 '+(o.ilvl||1)+'</div>'+o.affixes.map(a=>{let pct=['atkPct','hpPct','spdPct','leech','meleePct','rangePct','magicPct','allPct'].includes(a.stat)?'%':'';return '<div>• '+a.n+'：+'+a.v+pct+' '+(labels[a.stat]||a.stat)+' <span class="muted">[T'+a.tier+']</span></div>'}).join('')
  }
- if(hero.c==='range'){
-   flat.atk+=(S.sk['range:酸液:0']||0)*6;
-   pct.crit+=(S.sk['range:狙擊:1']||0)*2;
- }
- if(hero.c==='magic'){
-   flat.atk+=(S.sk['magic:雷霆:0']||0)*5+(S.sk['magic:烈焰:0']||0)*5;
-   flat.hp+=(S.sk['magic:生命:2']||0)*4;
- }
- Object.keys(o).forEach(k=>o[k]=(o[k]+(flat[k]||0))*(1+(pct[k]||0)/100));
- let army=armyBonus();Object.keys(o).forEach(k=>o[k]*=1+army);
- return o
+ let names={atk:'傷害',hp:'生命',crit:'暴擊',spd:'速度'};
+ return Object.entries(o.stats||{}).map(([k,v])=>(names[k]||k)+' +'+v+' [固定]').concat(Object.entries(o.pctStats||{}).map(([k,v])=>(names[k]||k)+' +'+v+'% [百分比]')).join(' · ')
 }
-function startBattle(e){if(S.battle)return;if(!S.s)return log('沒有兵蟻可以戰鬥');let heroAtk=S.heroes.reduce((sum,h)=>sum+heroStats(h).atk,0);S.battle={e,enemyHP:e.hp,enemyMax:e.hp,enemyDisplay:e.hp,army:S.s,armyStart:S.s,armyDisplay:S.s,heroAtk,t:0};document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));$('battlePage').classList.add('on');log('⚔️ '+e.name+' 戰鬥開始')}
-function unlockHero(){if(S.heroes.length>=3)return;let c=S.heroes.length===1?'range':'magic',name=c==='range'?'銀針':'星火';S.heroes.push({name,c,lv:1,xp:0,e:{},base:{atk:c==='range'?11:12,hp:95,spd:1.05,crit:7}});log('👑 隱藏 Boss 被擊敗：獲得 '+name+' 英雄蟻！')}
-function battleStep(dt){let B=S.battle;if(!B)return;B.t+=dt;B.enemyDisplay+=(B.enemyHP-B.enemyDisplay)*Math.min(1,dt*4);B.armyDisplay+=(B.army-B.armyDisplay)*Math.min(1,dt*4);let whirlLv=S.sk['melee:巨顎:1']||0,stompLv=S.sk['melee:巨顎:2']||0,godLv=S.sk['melee:巨顎:3']||0;
- B.whirl+=dt;B.ultimate+=dt;
- if(whirlLv&&B.whirl>=6){B.whirl=0;let aoe=whirlLv*8*2.5;B.enemyArmy=Math.max(0,B.enemyArmy-Math.max(1,Math.floor(whirlLv*.8)));B.enemyHP-=aoe;log('🌪️ 旋風斬！範圍傷害 '+Math.round(aoe))}
- if(stompLv&&B.t>2&&Math.floor(B.t)%9===0&&!B.lastStomp){B.lastStomp=Math.floor(B.t);let hit=stompLv*12*2;B.enemyHP-=hit;B.enemyArmy=Math.max(0,B.enemyArmy-Math.ceil(stompLv/2))}
- if(B.lastStomp!==Math.floor(B.t))B.lastStomp=0;
- let godMul=godLv&&B.ultimate%18<4?1+godLv*.05:1;
- let A=B.e.abilities||[],armor=A.some(a=>a.key==='armor')?.7:1,dodge=A.some(a=>a.key==='dodge')?.25:0,rage=A.some(a=>a.key==='rage')&&B.enemyHP/B.enemyMax<.4?1.75:1;if(Math.random()<dt*1.25&&Math.random()>dodge){let hit=B.heroAtk*(.65+Math.random()*.7)*armor*godMul;if(B.enemyArmy>0){let dead=Math.max(1,Math.floor(hit/Math.max(8,(B.e.lv||1)*1.3)));B.enemyArmy=Math.max(0,B.enemyArmy-dead);B.enemyHP-=hit*.25}else{B.enemyHP-=hit}}if(A.some(a=>a.key==='regen'))B.enemyHP=Math.min(B.enemyMax,B.enemyHP+B.enemyMax*.008*dt);let pressure=(B.e.dmg||1)*rage*(1+Math.min(.8,B.enemyArmy*.025));if(Math.random()<dt*(.4+pressure*.035)&&B.army>0){let loss=Math.max(1,Math.floor(pressure*(.22+Math.random()*.28)));if(A.some(a=>a.key==='slayer'))loss=Math.ceil(loss*1.6);B.army=Math.max(0,B.army-loss)}if(A.some(a=>a.key==='poison')&&Math.random()<dt*.45)B.army=Math.max(0,B.army-Math.max(1,Math.floor((B.e.lv||1)/12)));if(B.enemyHP<=0){S.s=B.army;S.kills++;let reward=2+S.loc+Math.floor((B.e.lv||1)/5)+({normal:0,elite:2,champion:5,boss:10}[B.e.tier]||0);roll(reward);lootRoll(B.e.tier,B.e.lv||1);S.heroes.forEach(h=>h.xp+=5+(B.e.lv||1));ents=ents.filter(q=>q!==B.e);let boss=B.e.tier==='boss';S.battle=null;if(boss)unlockHero();log('🏆 勝利！兵蟻存活 '+S.s);ui();setTimeout(()=>{document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));$('worldPage').classList.add('on')},650)}else if(B.army<=0){S.s=0;S.battle=null;log('⚠️ 兵蟻全滅；英雄蟻撤退，不會死亡。');ui();setTimeout(()=>{document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));$('worldPage').classList.add('on')},650)}}
-function drawAnt(ctx,px,py,scale,color,dir=1,hero=false,gear=null){
- ctx.save();ctx.translate(px,py);ctx.scale(dir*scale,scale);
- ctx.strokeStyle='#b47c4e';ctx.lineWidth=1.4/scale;
- for(let yy of [-6,0,6]){ctx.beginPath();ctx.moveTo(-1,yy);ctx.lineTo(-13,yy-8);ctx.stroke();ctx.beginPath();ctx.moveTo(3,yy);ctx.lineTo(14,yy+8);ctx.stroke()}
- ctx.fillStyle=color;ctx.strokeStyle=hero?'#f0c96a':'#a56d43';ctx.lineWidth=hero?2/scale:1/scale;
- [[-10,0,9,7],[1,0,7,6],[11,0,6,6]].forEach(z=>{ctx.beginPath();ctx.ellipse(z[0],z[1],z[2],z[3],0,0,7);ctx.fill();ctx.stroke()});
- if(hero){ctx.fillStyle='#ffd66c';ctx.beginPath();ctx.arc(11,-1,2,0,7);ctx.fill()}
- if(gear&&gear['武器']){ctx.strokeStyle='#e7e1c5';ctx.lineWidth=2/scale;ctx.beginPath();ctx.moveTo(15,-3);ctx.lineTo(27,-11);ctx.stroke()}
- if(gear&&gear['頭盔']){ctx.strokeStyle='#d6ad57';ctx.beginPath();ctx.arc(11,-1,8,3.5,5.9);ctx.stroke()}
- if(gear&&gear['胸甲']){ctx.strokeStyle='#91a6ad';ctx.lineWidth=3/scale;ctx.beginPath();ctx.arc(1,0,8,1.4,4.8);ctx.stroke()}
- ctx.restore()
-}
-function drawEnemy(ctx,e,px,py,t){
- let col={normal:'#75492b',elite:'#367fe0',champion:'#dfb531',boss:'#a74fd4'}[e.tier]||'#75492b',boss=e.tier==='boss',sc=boss?1.6:e.tier==='champion'?1.3:e.tier==='elite'?1.15:1;
- ctx.save();ctx.translate(px,py);ctx.scale(sc,sc);ctx.fillStyle=col;ctx.strokeStyle=boss?'#f3c3ff':'#d8ad77';ctx.lineWidth=2;
- ctx.beginPath();ctx.ellipse(-13,0,19,13,0,0,7);ctx.fill();ctx.stroke();ctx.beginPath();ctx.ellipse(11,0,14,11,0,0,7);ctx.fill();ctx.stroke();
- for(let y of [-8,0,8]){ctx.beginPath();ctx.moveTo(-6,y);ctx.lineTo(-29,y-12);ctx.stroke();ctx.beginPath();ctx.moveTo(6,y);ctx.lineTo(29,y+12);ctx.stroke()}
- if(e.tier!=='normal'){ctx.globalAlpha=.25+.12*Math.sin(t*4);ctx.strokeStyle=col;ctx.lineWidth=8;ctx.beginPath();ctx.arc(0,0,34,0,7);ctx.stroke()}
- ctx.restore()
-}
-function drawBattle(){
- let B=S.battle,c=$('battle');if(!c)return;let d=Math.min(2,devicePixelRatio||1),w=Math.max(320,c.clientWidth||innerWidth),h=Math.max(480,c.clientHeight||innerHeight-120);if(c.width!=w*d||c.height!=h*d){c.width=w*d;c.height=h*d}
- let x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);
- let g=x.createLinearGradient(0,0,w,h);g.addColorStop(0,'#26321d');g.addColorStop(.55,'#302819');g.addColorStop(1,'#17130e');x.fillStyle=g;x.fillRect(0,0,w,h);
- // roots / stones
- x.globalAlpha=.25;x.strokeStyle='#8a7046';x.lineWidth=8;x.beginPath();x.moveTo(0,h*.18);x.bezierCurveTo(w*.25,h*.28,w*.3,h*.05,w*.58,h*.2);x.stroke();x.globalAlpha=1;
- if(!B){x.fillStyle='#aaa';x.font='16px sans-serif';x.fillText('在世界地圖點擊生物開始戰鬥',20,40);$('battleInfo').innerHTML='';return}
- // all unlocked heroes, clearly separate from soldier swarm
- S.heroes.forEach((hero,i)=>{let yy=h*(.28+i*.22);drawAnt(x,w*.16,yy,1.55,['#d47a2c','#5f9fe7','#ad68db'][i]||'#d47a2c',1,true,hero.e);x.fillStyle='#f0dfbd';x.font='bold 12px sans-serif';x.fillText(hero.name,w*.08,yy-25)});
- // soldier formation
- let count=Math.min(60,B.army),cols=10;
- for(let i=0;i<count;i++){let row=Math.floor(i/cols),col=i%cols,px=w*.31+col*11+(row%2)*5,py=h*.31+row*18;drawAnt(x,px,py,.58,'#6d3d24',1,false,null)}
- // enemy on right
- // enemy leader + minion formation
- drawEnemy(x,B.e,w*.82,h*.5,B.t);
- let ec=Math.min(45,B.enemyArmy),ecols=9;
- for(let i=0;i<ec;i++){let row=Math.floor(i/ecols),col=i%ecols,px=w*.69-col*10-(row%2)*4,py=h*.31+row*17;drawAnt(x,px,py,.52,{normal:'#68422a',elite:'#3979d5',champion:'#c99d2d',boss:'#8d48b5'}[B.e.tier],-1,false,null)}
- // attack streaks make battle readable as action
- if((B.t*4|0)%2===0){x.strokeStyle='#e9c56c88';x.lineWidth=2;for(let i=0;i<4;i++){x.beginPath();x.moveTo(w*.48,h*(.38+i*.08));x.lineTo(w*.7,h*(.43+i*.04));x.stroke()}}
- let col={normal:'#8a5a35',elite:'#3979d5',champion:'#d6ad32',boss:'#a24fd0'}[B.e.tier];
- // symmetric HP bars
- let er=Math.max(0,B.enemyDisplay/B.enemyMax),ar=Math.max(0,B.armyDisplay/B.armyStart);
- x.fillStyle='#07140b';x.fillRect(w*.05,18,w*.39,16);x.fillStyle='#63c86d';x.fillRect(w*.05,18,w*.39*ar,16);x.strokeStyle='#b6d8b9';x.strokeRect(w*.05,18,w*.39,16);x.fillStyle='#fff';x.font='bold 11px sans-serif';x.fillText(`己方軍團 ${Math.ceil(B.armyDisplay)} / ${B.armyStart}`,w*.05,14);
- x.fillStyle='#180a0a';x.fillRect(w*.56,18,w*.39,16);x.fillStyle=col;x.fillRect(w*.56,18,w*.39*er,16);x.strokeStyle='#e4b5ad';x.strokeRect(w*.56,18,w*.39,16);x.fillStyle='#fff';x.fillText(`${B.e.name} Lv.${B.e.lv||1} ${Math.ceil(B.enemyDisplay)} / ${Math.ceil(B.enemyMax)}`,w*.56,14);
- let abilityText=(B.e.abilities||[]).map(a=>`<b>${a.name}</b>：${a.desc}`).join('　');
- $('battleInfo').innerHTML=`<b>己方</b>：${S.heroes.length} 隻英雄＋${B.army} 兵蟻　｜　<b>敵方</b>：${B.e.name} Lv.${B.e.lv||1}<br>${abilityText?'<span style="color:#ffcf72">特殊能力：'+abilityText+'</span><br>':''}英雄能力 +${Math.round(armyBonus()*100)}%`
-}
-$('egg').onclick=()=>{let c=eggCost();if(S.r<c)return log('主資源不足');S.r-=c;S.chain++;S.lastEgg=performance.now();let w=Math.floor(Math.random()*11);S.w+=w;S.s+=10-w;log(`🥚 工蟻${w}、兵蟻${10-w}`);ui()};
-function classSpent(c){return Object.entries(S.sk).filter(([k])=>k.startsWith(c+':')).reduce((a,[k,v])=>a+(v||0),0)}
-function pointCost(c){let n=classSpent(c)+S.free[c];return 3+Math.floor(n/3)*2+Math.floor(n/15)*3}
-function buyPoint(c){let used=classSpent(c)+S.free[c],cost=pointCost(c);if(used>=100)return log(cn[c]+'技能點已達100');if(S.x[c]<cost)return log('特化資源不足，需要 '+cost);S.x[c]-=cost;S.free[c]++;renderSkills();ui()}
-function add(c,pi,i){let p=pages[c][pi],k=c+':'+p[0]+':'+i,lv=S.sk[k]||0;if(lv>=20||!S.free[c]||classSpent(c)>=100)return;let prev=i===0?[]:(i<=2?[0]:i<=4?[1,2]:[3,4]);if(i>0&&(classSpent(c)<p[1][i][1]||!prev.some(n=>(S.sk[c+':'+p[0]+':'+n]||0)>0)))return;S.free[c]--;S.sk[k]=lv+1;renderSkills();ui()}
-function renderSkills(){
- let top=$('skilltop'),book=$('book');if(!top||!book)return;
- if(!pages[cls])cls='melee';
- top.innerHTML=['melee','range','magic'].map(c=>`<button class="${cls===c?'active':''}" onclick="cls='${c}';renderSkills()">${cn[c]}｜資源 ${Math.floor(S.x[c])}｜技能 ${classSpent(c)}/100｜可用 ${S.free[c]}</button>`).join('');
- let used=classSpent(cls),cost=pointCost(cls);
- let trees=pages[cls].map((p,pi)=>{
-   let nodes=p[1].map((q,i)=>{
-     let key=cls+':'+p[0]+':'+i,lv=S.sk[key]||0;
-     let prev=i===0?[]:(i<=2?[0]:i<=4?[1,2]:[3,4]);
-     let lock=i>0&&(used<q[1]||!prev.some(k=>(S.sk[cls+':'+p[0]+':'+k]||0)>0));
-     let sc=skillScale[q[0]]||{unit:5,label:'技能效果',type:'percent',suffix:'%'};
-     let cur=Math.round(sc.unit*lv*100)/100,next=Math.round(sc.unit*(lv+1)*100)/100;
-     let tier=i===0?'基礎':i<=2?'中層 I':i<=4?'中層 II':'終極';
-     return `<div class="skillTier ${lock?'locked':''}">
-       <div class="tierLabel">${tier}</div>
-       <button class="node ${lock?'locked':''} ${lv>=20?'max':''}" ${lock?'disabled':''} onclick="add('${cls}',${pi},${i})">
-       <b>${q[0]}</b>　Lv.${lv}/20<br>
-       <span>${q[2]}</span><br>
-       <span class="muted">${sc.label} [${sc.type==='flat'?'固定值':'百分比'}]：+${cur}${sc.suffix}${lv<20?` → +${next}${sc.suffix}`:'　MAX'}${i?` · 需求本職 ${q[1]} 點`:''}</span>
-       </button></div>`
-   }).join('');
-   return `<div class="tree"><h3>${p[0]}</h3>${nodes}</div>`
- }).join('');
- book.innerHTML=`<div class="card"><b>${cn[cls]}技能點：${used}/100</b><br>可用 ${S.free[cls]} 點　｜　下一點需要 <b>${cost}</b> ${cn[cls]}資源<br><button onclick="buyPoint('${cls}')">兌換 1 技能點</button></div><div class="trees">${trees}</div>`;
-}
-function gearVisual(hero){let e=hero.e||{},m=[];if(e['頭盔'])m.push('<span class="gearMark gm-head">⛑️</span>');if(e['武器'])m.push('<span class="gearMark gm-weapon">⚔️</span>');if(e['胸甲'])m.push('<span class="gearMark gm-chest">🛡️</span>');if(e['護身符'])m.push('<span class="gearMark gm-amulet">◆</span>');if(e['鞋子'])m.push('<span class="gearMark gm-boots">✦</span>');return `<div class="heroVisual"><div class="heroNameplate">${hero.name} · ${cn[hero.c]}</div><div class="heroAnt"><i class="seg abd"></i><i class="seg thor"></i><i class="seg head"></i><i class="leg l1"></i><i class="leg l2"></i><i class="leg l3"></i><i class="leg r1"></i><i class="leg r2"></i><i class="leg r3"></i></div>${m.join('')}</div>`}
-function renderHeroes(){let box=$('heroes');if(!box)return;box.innerHTML=S.heroes.map(hero=>{let st=heroStats(hero);return `<div class="card hero">${gearVisual(hero)}<div>Lv.${hero.lv} XP ${hero.xp} · 兵蟻群體加成 +${Math.round(armyBonus()*100)}%</div><div><b>ATK ${st.atk.toFixed(1)}</b> · HP ${st.hp.toFixed(0)} · CRIT ${st.crit.toFixed(1)} · SPD ${st.spd.toFixed(2)}</div><div class=slots>${['頭盔','胸甲','武器','副手','腰帶','手套','鞋子','護身符','戒指1','戒指2'].map(s=>`<div class=slot>${s}<br>${hero.e[s]?hero.e[s].name:'—'}</div>`).join('')}</div></div>`}).join('')}
+function renderHeroes(){let box=$('heroes');if(!box)return;box.innerHTML=S.heroes.map(hero=>{hero.e=hero.e||{};let st=heroStats(hero);return `<div class="card hero">${gearVisual(hero)}<div>Lv.${hero.lv} XP ${hero.xp} · 兵蟻群體加成 +${Math.round(armyBonus()*100)}%</div><div><b>ATK ${st.atk.toFixed(1)}</b> · HP ${st.hp.toFixed(0)} · CRIT ${st.crit.toFixed(1)} · SPD ${st.spd.toFixed(2)}</div><div class=slots>${['頭盔','胸甲','武器','副手','腰帶','手套','鞋子','護身符','戒指1','戒指2'].map(s=>`<div class=slot>${s}<br>${hero.e[s]?hero.e[s].name:'—'}</div>`).join('')}</div></div>`}).join('')}
 function isEquipped(o){return S.heroes.some(h=>Object.values(h.e||{}).includes(o))}
 function renderLoot(){let rank={unique:5,set:4,charm:3,rare:2,magic:1};let sorted=S.loot.map((o,i)=>({o,i})).sort((a,b)=>(rank[b.o.rar]||0)-(rank[a.o.rar]||0)||(b.o.quality||0)-(a.o.quality||0));$('loot').innerHTML=sorted.length?sorted.map(({o,i})=>{let owner=S.heroes.find(x=>Object.values(x.e||{}).includes(o));return `<div class="card ${o.rar}" style="${owner?'outline:2px solid #74e38a':''}"><b>${o.name}</b> · ${o.slot} · 品質 ${o.quality||1} ${owner?`<span class=good>● ${owner.name}裝備中</span>`:''}<div>${statText(o)}</div>${o.rar==='charm'?'巢穴護符':S.heroes.map((hero,hi)=>{let a=heroStats(hero),b=heroStats(hero,o),on=owner===hero;return `<div class=compare><div>${hero.name}<br>ATK ${a.atk.toFixed(1)} / HP ${a.hp.toFixed(0)}</div><div class=good>換裝後<br>ATK ${b.atk.toFixed(1)} / HP ${b.hp.toFixed(0)}</div></div><button ${on?'disabled':''} onclick="equipItem(${i},${hi})">${on?'● 裝備中':'裝備給 '+hero.name}</button>`}).join('')}</div>`}).join(''):'尚無裝備'}
 function renderPlaces(){$('places').innerHTML=places.map((p,i)=>`<div class=card><h3>${p[0]}</h3><div>${p[3]}</div><div class=rates>${['🌿','🦷','🎯','✨'].map((x,j)=>`<span>${x}${p[2][j]*100}%</span>`).join('')}</div><button ${i===S.loc||S.r<p[1]?'disabled':''} onclick="move(${i})">${i===S.loc?'目前位置':'遷移 🌿'+p[1]}</button></div>`).join('')}
@@ -230,6 +191,6 @@ function loop(t){let dt=Math.min(.05,(t-last)/1000);last=t;S.t+=dt;S.r+=S.w*.045
 ui();
 draw();
 requestAnimationFrame(loop);
-try{renderSkills()}catch(err){console.error('skill UI',err)}
-document.addEventListener('DOMContentLoaded',()=>{try{renderSkills()}catch(e){console.error(e)}});
+
+
 </script></body></html>
