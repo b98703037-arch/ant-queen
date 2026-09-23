@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>蟻后：地下帝國 v0.15</title>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>蟻后：地下帝國 v0.17</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#090806;color:#eee4cf;font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif}#app{max-width:1050px;margin:auto;min-height:100vh;background:#120e0a}.hud{position:sticky;top:0;z-index:40;display:flex;justify-content:space-between;gap:8px;padding:8px;background:#100d09ee;border-bottom:1px solid #51422d;font-size:12px}.stats{display:flex;gap:9px;flex-wrap:wrap}.world{height:360px;position:relative;overflow:hidden;background:linear-gradient(#344a30 0 29%,#503921 29%,#21160f 100%)}canvas{width:100%;height:100%;display:block}.spawn{position:absolute;font-size:29px;cursor:pointer;filter:drop-shadow(0 3px 3px #0009);animation:bob 1.8s ease-in-out infinite;touch-action:manipulation}@keyframes bob{50%{transform:translateY(-5px)}}.card{margin:9px;padding:11px;border:1px solid #4d3e2a;background:#1b1610;border-radius:13px}.muted{font-size:11px;color:#b5a58a}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.grow{flex:1}button{min-height:42px;border:1px solid #5b4932;background:#292117;color:#eee4cf;border-radius:10px;padding:8px;font-weight:650}button:disabled{opacity:.35}.tabs{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:9px}.hidden{display:none!important}.tree{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.branch{background:#15110c;border:1px solid #403522;border-radius:11px;padding:7px}.branch h3{font-size:13px;margin:2px 0 6px}.node{width:100%;text-align:left;margin:4px 0;font-size:11px}.owned{background:#40341f;border-color:#c5a75c}.enc{position:absolute;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;z-index:25}.encbox{width:min(92%,470px);background:#19130d;border:1px solid #806440;border-radius:16px;padding:15px;text-align:center}.encicon{font-size:56px}.partner,.hero,.log{border:1px solid #4a3b27;border-radius:10px;padding:8px;margin-top:7px;background:#15110c}.bar{height:7px;background:#30271c;border-radius:9px;overflow:hidden;margin-top:5px}.fill{height:100%;background:#bda15b}.battle{position:absolute;inset:0;background:#0b0907f5;z-index:22;padding:10px;display:flex;flex-direction:column}.battlefield{position:relative;flex:1;border:1px solid #5a472f;border-radius:12px;overflow:hidden;background:linear-gradient(#263422,#34261a)}.unit{position:absolute;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:bold}.friend{background:#1d120b;border:1px solid #c59d58}.enemy{background:#541d18;border:1px solid #e58a70}.shot{position:absolute;width:5px;height:5px;border-radius:50%;background:#ddd;transform:translate(-50%,-50%)}.hp{position:absolute;height:3px;background:#2a2119;width:22px;top:-6px;left:50%;transform:translateX(-50%)}.hp i{display:block;height:100%;background:#c3aa67}.battlehud{display:flex;gap:7px;align-items:center;padding:6px 0;font-size:11px}.loot{font-size:12px}.tag{display:inline-block;border:1px solid #5a4931;border-radius:12px;padding:2px 6px;margin:2px;font-size:10px}.buy{width:100%;font-size:14px}@media(max-width:700px){.world{height:335px}.tree{grid-template-columns:1fr 1fr}.hud{font-size:10px}.tabs{grid-template-columns:repeat(3,1fr)}}
 
@@ -7,6 +7,15 @@
 .antbody{position:absolute;transform:translate(-50%,-50%);width:22px;height:12px;filter:drop-shadow(0 2px 2px #0008)}.antbody .seg{position:absolute;border-radius:50%;background:#2a160d;border:1px solid #a77b49}.antbody .head{width:7px;height:7px;right:0;top:2px}.antbody .thorax{width:8px;height:8px;left:8px;top:2px}.antbody .abd{width:10px;height:9px;left:0;top:1px}.antbody:before,.antbody:after{content:"";position:absolute;left:7px;top:5px;width:13px;height:1px;background:#8a6844;box-shadow:0 -5px #8a6844,0 5px #8a6844;transform:rotate(28deg)}.antbody:after{transform:rotate(-28deg)}.antbody.veteran .seg{background:#1763ad}.antbody.heroant .seg{background:#c15d08}.antbody.legend .seg{background:#7837a8}.creature{position:absolute;transform:translate(-50%,-50%);font-size:27px;filter:drop-shadow(0 4px 4px #000)}.creature.big{font-size:45px}.creature.giant{font-size:66px}.creature .hp{width:42px;top:-6px}.creature.giant .hp{width:72px}
 
 .branch{position:relative;padding-left:10px}.branch .node:not(.hidden){position:relative;margin:5px 4px}.branch .node:not(.hidden):before{content:"";position:absolute;left:-8px;top:50%;width:7px;border-top:1px solid #806b4d}.branch h3{border-left:3px solid #806b4d;padding-left:7px}
+
+#battleCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:2;border-radius:16px}
+#field{background:
+ radial-gradient(circle at 18% 25%,#50613255 0 7%,transparent 8%),
+ radial-gradient(circle at 72% 70%,#43351f88 0 10%,transparent 11%),
+ linear-gradient(135deg,#2b321d,#191c12 48%,#302719);
+ overflow:hidden;box-shadow:inset 0 0 55px #000}
+#field:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 49%,#d6b56b12 50%,transparent 51%);z-index:1}
+.battleLegend{position:absolute;left:10px;bottom:8px;z-index:5;background:#080a07aa;padding:5px 8px;border-radius:8px;font-size:11px}
 </style></head><body><div id="app">
 <div class="hud"><div class="stats"><span>🐜 <b id="w">35</b></span><span>🛡️ <b id="s">10</b></span><span>🏹 <b id="r">0</b></span><span>🩹 <b id="m">0</b></span><span>🍄 <b id="f">100</b></span><span>🍃 <b id="leaf">30</b></span><span>🥩 <b id="protein">10</b></span><span>🍯 <b id="honey">0</b></span><span>🔬 <b id="tp">3</b> TP</span></div><b id="day">Day 1</b></div>
 <div class="world"><canvas id="cv"></canvas><div id="spawns"></div><div style="position:absolute;left:8px;bottom:8px;background:#15110cdd;border:1px solid #57452f;border-radius:8px;padding:6px;font-size:11px">探索 → 戰鬥 → 戰利品/科技點 → 強化</div>
@@ -90,7 +99,7 @@ function buildTree(){
   if(lv==0&&!can(k))return;
   if(S.tp<cost)return msg('TP 不足');
   S.tp-=cost;S.skillLv[k[0]]=lv+1;S.skills.add(k[0]);
-  if(k[0]=='acid')S.r=Math.max(S.r,3);if(k[0]=='medic')S.m=Math.max(S.m,2);
+  
   msg(`🔬 ${k[2]} → Lv.${lv+1}`);ui()
  })
 }
@@ -115,7 +124,7 @@ $('ally').onclick=()=>{let {key,o}=S.current;if(Math.random()<(o.boss?.12:.35)){
 function makeUnit(side,type,x,y,hp,atk,range,speed){return {side,type,x,y,hp,max:hp,atk,range,speed,cd:Math.random(),dead:false}}
 function startBattle(){
  let {key,o}=S.current;closeEnc(true);let u=[];
- let melee=Math.min(38,S.s+S.troops.jaw+S.troops.armor),ranged=Math.min(22,(S.skills.has('acid')?Math.max(S.r,Math.floor(S.s*.28)):0)+S.troops.acid),med=Math.min(9,(S.skills.has('medic')?Math.max(S.m,2):0)+S.troops.medic);
+ let melee=Math.min(38,S.s+S.troops.jaw+S.troops.armor),ranged=Math.min(22,(S.skills.has('acid')?Math.max(S.r,Math.floor(S.s*.28)):0)+S.troops.acid),med=Math.min(9,(S.troops.medic)+S.troops.medic);
  for(let i=0;i<melee;i++)u.push(makeUnit('f','m',8+Math.random()*18,8+Math.random()*84,22*(S.skills.has('armor')?1.2:1),5*(S.skills.has('bite')?1.25:1),7,S.skills.has('haste')?18:12));
  for(let i=0;i<ranged;i++)u.push(makeUnit('f','r',5+Math.random()*15,8+Math.random()*84,14,4,S.skills.has('range2')?38:29,S.skills.has('haste')?14:9));
  for(let i=0;i<med;i++)u.push(makeUnit('f','h',5+Math.random()*12,10+Math.random()*80,13,0,24,8));
@@ -188,8 +197,61 @@ function fx(x,y,txt,cls){if(!S.battle)return;let e=document.createElement('div')
 function shake(){field.classList.remove('shake');void field.offsetWidth;field.classList.add('shake')}
 function win(){let B=S.battle,o=B.o;S.tp+=o.tp;S.f+=o.food;S.protein+=Math.max(2,Math.round(o.food*.12));if(o.sample&&Math.random()<.75){S.samples[o.sample]=(S.samples[o.sample]||0)+1}let dead=B.u.filter(x=>x.side=='f'&&x.dead&&x.type!='h').length;S.s=Math.max(1,S.s-Math.ceil(dead*.65));let kills=o.n,xp=Math.round((8+o.tp*4)*(S.skills.has('warxp')?1.5:1));S.heroes[0].xp+=xp;S.heroes[0].k+=kills;S.heroes[0].lv=1+Math.floor(S.heroes[0].xp/30);msg(`🏆 勝利！+${o.tp} TP、+${o.food} 菌糧${o.sample?'；取得的 '+o.sample+' 樣本 '+(S.samples[o.sample]||0)+'/3':''}`);S.battle=null;$('battle').classList.add('hidden');ui()}
 function lose(){let B=S.battle;let dead=B.u.filter(x=>x.side=='f'&&x.dead).length;S.s=Math.max(1,S.s-Math.max(2,Math.ceil(dead*.8)));msg('☠️ 狩獵隊潰敗。損失大量戰鬥蟻，沒有取得科技點。');S.battle=null;$('battle').classList.add('hidden');ui()}
-function renderBattle(){let B=S.battle;if(!B)return;$('bt').textContent=B.time.toFixed(1);field.innerHTML='<i class="terrain" style="width:90px;height:48px;left:35%;top:12%"></i><i class="terrain" style="width:120px;height:62px;left:50%;top:72%"></i>';B.u.filter(x=>!x.dead).forEach(a=>{let e=document.createElement('div');e.style.left=a.x+'%';e.style.top=a.y+'%';if(a.side=='f'){e.className='antbody'+(a.rank?' '+a.rank:'');e.innerHTML='<i class="seg abd"></i><i class="seg thorax"></i><i class="seg head"></i>'}else{let scale=B.o.hp>1000?'giant':B.o.hp>300?'big':'';e.className='creature '+scale;e.textContent=B.o.icon}let hp=document.createElement('span');hp.className='hp';hp.innerHTML=`<i style="width:${Math.max(0,a.hp/a.max*100)}%"></i>`;e.appendChild(hp);field.appendChild(e)});B.shots.forEach(q=>{let e=document.createElement('i');e.className='shot';e.style.left=q.tx+'%';e.style.top=q.ty+'%';field.appendChild(e)})}
-function sim(){S.protein+=(S.ranches.grub*(.012+.004*S.ranches.grubLv))*S.spd;
+
+function renderBattle(){
+ let B=S.battle;if(!B)return;$('bt').textContent=B.time.toFixed(1);
+ let c=$('battleCanvas');
+ if(!c){field.innerHTML='<canvas id="battleCanvas"></canvas><div class="battleLegend">近戰包圍 · 遠程後排 · 醫護救援</div>';c=$('battleCanvas')}
+ let dpr=Math.min(2,window.devicePixelRatio||1),w=field.clientWidth,h=field.clientHeight;
+ if(c.width!=w*dpr||c.height!=h*dpr){c.width=w*dpr;c.height=h*dpr}
+ let x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);
+ // battlefield debris
+ x.globalAlpha=.28;x.fillStyle='#8e7b4c';
+ [[.12,.2,18,5],[.34,.78,24,6],[.64,.16,16,4],[.78,.62,28,7]].forEach(q=>{x.save();x.translate(q[0]*w,q[1]*h);x.rotate(-.35);x.fillRect(-q[2]/2,-q[3]/2,q[2],q[3]);x.restore()});x.globalAlpha=1;
+ let live=B.u.filter(a=>!a.dead);
+ live.forEach(a=>{
+  let px=a.x/100*w,py=a.y/100*h;
+  if(a.side==='f'){
+   let rank=a.rank||'', body=rank==='legend'?'#9d57d5':rank==='heroant'?'#e77718':rank==='veteran'?'#328ee8':'#5a301b';
+   let ang=0,target=live.find(z=>z.side==='e');if(target)ang=Math.atan2(target.y-a.y,target.x-a.x);
+   x.save();x.translate(px,py);x.rotate(ang);
+   // legs
+   x.strokeStyle='#b69469';x.lineWidth=1;
+   for(let yy of [-4,0,4]){x.beginPath();x.moveTo(-2,yy);x.lineTo(-8,yy-5);x.stroke();x.beginPath();x.moveTo(2,yy);x.lineTo(8,yy+5);x.stroke()}
+   // body
+   x.fillStyle=body; x.beginPath();x.ellipse(-6,0,6,4.5,0,0,7);x.fill();
+   x.beginPath();x.ellipse(1,0,4.5,3.7,0,0,7);x.fill();
+   x.beginPath();x.ellipse(7,0,3.5,3.2,0,0,7);x.fill();
+   // caste cue
+   if(a.type==='range'){x.strokeStyle='#9de37a';x.beginPath();x.moveTo(7,-2);x.lineTo(14,-6);x.stroke()}
+   if(a.type==='medic'){x.fillStyle='#8affbd';x.fillRect(-1,-2,2,4);x.fillRect(-2,-1,4,2)}
+   if(rank){x.shadowBlur=10;x.shadowColor=body;x.strokeStyle=body;x.beginPath();x.arc(0,0,10,0,7);x.stroke()}
+   x.restore();
+  }else{
+   let giant=B.o.hp>1000,scale=giant?2.1:(B.o.hp>300?1.45:1);
+   x.save();x.translate(px,py);x.scale(scale,scale);
+   // enemy silhouette, no emoji-dot representation
+   x.fillStyle=B.o.boss?'#6e211c':'#4c3422';x.strokeStyle='#c59a62';x.lineWidth=1.5;
+   x.beginPath();x.ellipse(0,0,14,8,0,0,7);x.fill();x.stroke();
+   x.beginPath();x.arc(12,-1,6,0,7);x.fill();x.stroke();
+   for(let yy of [-5,0,5]){x.beginPath();x.moveTo(-5,yy);x.lineTo(-18,yy-7);x.stroke();x.beginPath();x.moveTo(5,yy);x.lineTo(18,yy+7);x.stroke()}
+   if(B.o.boss){x.strokeStyle='#ffb45c88';x.beginPath();x.arc(0,0,21,0,7);x.stroke()}
+   x.restore();
+  }
+  // hp bars only when damaged
+  if(a.hp<a.max){x.fillStyle='#170d0a';x.fillRect(px-10,py-12,20,2);x.fillStyle=a.side==='f'?'#7fcf6b':'#d85b4b';x.fillRect(px-10,py-12,20*Math.max(0,a.hp/a.max),2)}
+ });
+ // projectiles / ranged attacks
+ B.shots.forEach(q=>{let px=q.tx/100*w,py=q.ty/100*h;x.shadowBlur=9;x.shadowColor='#a9ff7d';x.fillStyle='#c7ff94';x.beginPath();x.arc(px,py,2.6,0,7);x.fill();x.shadowBlur=0});
+}
+
+function sim(){
+let fungusWorkers=Math.max(1,Math.floor(S.w*.22));
+let fungusPotential=(0.012+fungusWorkers*.0018)*S.spd;
+let leafUsed=Math.min(S.leaf, fungusPotential*.55);
+S.leaf-=leafUsed;
+S.food+=leafUsed*(1.65+Math.min(.75,S.w*.002));
+S.protein+=(S.ranches.grub*(.0025+.0007*S.ranches.grubLv))*S.spd;
  let gatherers=Math.max(0,Math.floor(S.w*.62));
  let leafRate=gatherers*.018*S.spd;
  let proteinRate=Math.floor(S.w*.10)*.004*S.spd;
@@ -197,7 +259,7 @@ function sim(){S.protein+=(S.ranches.grub*(.012+.004*S.ranches.grubLv))*S.spd;
 if(S.paused||S.battle)return;let d=.2*S.spd;S.t+=d;S.f+=S.w*.0015*d;S.leaf+=S.w*.0008*d;S.honey+=S.ranches.aphid*.006*d;S.protein+=S.ranches.grub*.004*d;if(S.leaf>1){let c=Math.min(S.leaf,.018*S.w*d);S.leaf-=c;S.f+=c*.75}if(S.t>15){S.t=0;S.day++;if(Math.random()<.9)spawn();resourceSpawn()}[[60,1],[150,1],[400,2]].forEach(([n,p])=>{if(S.w+S.s>=n&&!S.marks.has(n)){S.marks.add(n);S.tp+=p;msg('人口里程碑僅提供少量 +'+p+' TP；主要科技仍需靠戰鬥。')}});draw();ui()}
 $('boost').onclick=()=>{let c=Math.floor(S.boost);if(S.f<c)return msg('菌糧不足。');S.f-=c;let n=S.skills.has('brood')?15:10,so=Math.round(n*(S.skills.has('soldier')?Math.min(.8,S.ratio+.2):S.ratio));S.s+=so;S.w+=n-so;S.boost*=S.skills.has('cheap')?1.20:1.36;msg('🥚 快速培育 '+n+' 隻，其中 '+so+' 隻為兵蟻。');ui()}
 function draw(){let r=cv.getBoundingClientRect(),d=devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);let sx=r.width/900,sy=r.height/470;ctx.save();ctx.scale(sx,sy);ctx.strokeStyle='#765438';ctx.lineWidth=17;ctx.lineCap='round';[[450,135,450,240],[450,220,280,315],[450,220,620,315],[280,320,280,420],[620,315,620,420]].forEach(p=>{ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(p[2],p[3]);ctx.stroke()});[['育幼室',280,320,105,58],['菌圃',620,320,110,62],['王室',450,415,100,48]].forEach(q=>{ctx.fillStyle='#62472d';ctx.beginPath();ctx.ellipse(q[1],q[2],q[3],q[4],0,0,7);ctx.fill();ctx.fillStyle='#d0bea0';ctx.font='13px sans-serif';ctx.textAlign='center';ctx.fillText(q[0],q[1],q[2]-q[4]+18)});for(let i=0;i<Math.min(90,S.w+S.s);i++){ctx.fillStyle='#090604';ctx.beginPath();ctx.arc(180+(i*71+S.t*9)%540,250+(i*37)%175,i<S.s?4:2.5,0,7);ctx.fill()}ctx.restore()}
-function ui(){$('w').textContent=Math.floor(S.w);$('s').textContent=Math.floor(S.s);$('r').textContent=S.skills.has('acid')?Math.max(S.r,Math.floor(S.s*.25)):0;$('m').textContent=S.skills.has('medic')?Math.max(S.m,2):0;$('f').textContent=Math.floor(S.f);$('leaf').textContent=Math.floor(S.leaf);$('protein').textContent=Math.floor(S.protein);$('honey').textContent=Math.floor(S.honey);$('tp').textContent=$('tp2').textContent=S.tp;$('day').textContent='Day '+S.day;$('ratioTxt').textContent=Math.round(S.ratio*100)+'%';$('boost').textContent='🍄 '+Math.floor(S.boost)+' → 快速培育 +'+(S.skills.has('brood')?15:10);tech.forEach(k=>{let e=$('k'+k[0]);if(e){let lv=S.skillLv[k[0]]||0,vis=skillVisible(k),cost=k[3]+lv*2;e.classList.toggle('hidden',!vis);e.classList.toggle('owned',lv>=3);e.disabled=lv>=3||(lv==0&&!can(k));let le=$('lv'+k[0]),ce=$('cost'+k[0]);if(le)le.textContent=`Lv.${lv}/3`;if(ce)ce.textContent=lv>=3?'MAX':`升級：${cost} TP`}});document.querySelectorAll('#tree .branch').forEach(b=>b.classList.toggle('hidden',!b.querySelector('.node:not(.hidden)')));$('armyInfo').innerHTML=`<div class="partner"><b>前排兵蟻 ${S.s}</b><div class="muted">近戰、承傷、包圍。</div></div><div class="partner"><b>🏹 酸液兵 ${S.skills.has('acid')?Math.max(S.r,Math.floor(S.s*.25)):0}</b><div class="muted">${S.skills.has('acid')?'已解鎖：保持距離自動射擊。':'研究「酸液兵」後解鎖遠程戰鬥。'}</div></div><div class="partner"><b>🩹 醫護蟻 ${S.skills.has('medic')?Math.max(S.m,2):0}</b><div class="muted">${S.skills.has('medic')?'自動尋找受傷友軍治療。':'研究「醫護工蟻」後解鎖回血。'}</div></div>`;let pk=Object.keys(S.partners);$('partners').innerHTML=(pk.length?pk.map(k=>`<div class="partner"><b>${enemies[k]?.icon||'•'} ${enemies[k]?.name||k} ×${S.partners[k]}</b><div class="muted">共生已解鎖專屬科技。</div></div>`).join(''):'<div class="partner muted">尚未收服共生生物。</div>')+Object.keys(S.samples).map(k=>`<div class="partner"><b>🧪 ${enemies[k]?.name} 樣本 ${S.samples[k]}/3</b><div class="muted">${S.samples[k]>=3?'已可研究仿生科技':'繼續狩獵以完成研究'}</div></div>`).join('');$('soulInfo').innerHTML=SOULS.length?SOULS.map(x=>`<div class="hero">🔥 <b>${x.name}</b> Lv.${x.lv}　擊殺 ${x.k||0}<div class="muted">可帶入下一周目</div></div>`).join(''):'<div class="muted">尚未有傳說個體留下靈魂。</div>';
+function ui(){$('w').textContent=Math.floor(S.w);$('s').textContent=Math.floor(S.s);$('r').textContent=S.troops.acid;$('m').textContent=S.troops.medic;$('f').textContent=Math.floor(S.f);$('leaf').textContent=Math.floor(S.leaf);$('protein').textContent=Math.floor(S.protein);$('honey').textContent=Math.floor(S.honey);$('tp').textContent=$('tp2').textContent=S.tp;$('day').textContent='Day '+S.day;$('ratioTxt').textContent=Math.round(S.ratio*100)+'%';$('boost').textContent='🍄 '+Math.floor(S.boost)+' → 快速培育 +'+(S.skills.has('brood')?15:10);tech.forEach(k=>{let e=$('k'+k[0]);if(e){let lv=S.skillLv[k[0]]||0,vis=skillVisible(k),cost=k[3]+lv*2;e.classList.toggle('hidden',!vis);e.classList.toggle('owned',lv>=3);e.disabled=lv>=3||(lv==0&&!can(k));let le=$('lv'+k[0]),ce=$('cost'+k[0]);if(le)le.textContent=`Lv.${lv}/3`;if(ce)ce.textContent=lv>=3?'MAX':`升級：${cost} TP`}});document.querySelectorAll('#tree .branch').forEach(b=>b.classList.toggle('hidden',!b.querySelector('.node:not(.hidden)')));$('armyInfo').innerHTML=`<div class="partner"><b>總兵力 ${S.s+Object.values(S.troops).reduce((a,b)=>a+b,0)}</b><div class="muted">普通兵蟻 ${S.s}；特殊兵種 ${Object.values(S.troops).reduce((a,b)=>a+b,0)}</div></div><div class="partner"><b>🦷 巨顎 ${S.troops.jaw}　🛡️ 重甲 ${S.troops.armor}</b></div><div class="partner"><b>🏹 酸液 ${S.troops.acid}　🩹 醫護 ${S.troops.medic}</b></div><div class="partner"><b>💨 神速 ${S.troops.swift}　⚡ 雷電 ${S.troops.storm}</b></div>`;let pk=Object.keys(S.partners);$('partners').innerHTML=(pk.length?pk.map(k=>`<div class="partner"><b>${enemies[k]?.icon||'•'} ${enemies[k]?.name||k} ×${S.partners[k]}</b><div class="muted">共生已解鎖專屬科技。</div></div>`).join(''):'<div class="partner muted">尚未收服共生生物。</div>')+Object.keys(S.samples).map(k=>`<div class="partner"><b>🧪 ${enemies[k]?.name} 樣本 ${S.samples[k]}/3</b><div class="muted">${S.samples[k]>=3?'已可研究仿生科技':'繼續狩獵以完成研究'}</div></div>`).join('');$('soulInfo').innerHTML=SOULS.length?SOULS.map(x=>`<div class="hero">🔥 <b>${x.name}</b> Lv.${x.lv}　擊殺 ${x.k||0}<div class="muted">可帶入下一周目</div></div>`).join(''):'<div class="muted">尚未有傳說個體留下靈魂。</div>';
 $('breedInfo').innerHTML=`
 <div class="resbox"><b>🦷 巨顎兵 ×${S.troops.jaw}</b><div class="muted">高單體傷害</div><button onclick="breed('jaw',10)">🥩10 培育</button></div>
 <div class="resbox"><b>🛡️ 重甲兵 ×${S.troops.armor}</b><div class="muted">生命約 ×1.8</div><button onclick="breed('armor',12)">🥩12 培育</button></div>
@@ -207,12 +269,13 @@ $('nectarInfo').innerHTML=`
 <div class="resbox"><b>💨 神速蟻 ×${S.troops.swift}</b><div class="muted">極高移速與攻擊頻率</div><button onclick="nectarTroop('swift',12)">🍯12 培育</button></div>
 <div class="resbox"><b>⚡ 雷電蟻 ×${S.troops.storm}</b><div class="muted">英雄色遠程特殊個體</div><button onclick="nectarTroop('storm',18)">🍯18 培育</button></div>
 <div class="resbox"><b>⚡ 戰前興奮</b><div class="muted">下一場戰鬥攻速提升</div><button onclick="nectarBuff('haste',8)">🍯8 啟動</button></div>
-<div class="resbox"><b>💚 高能修復</b><div class="muted">下一場持續回血</div><button onclick="nectarBuff('regen',10)">🍯10 啟動</button></div>`;$('ranchInfo').innerHTML=`<div class="resbox"><b>🍃 葉片 ${Math.floor(S.leaf)}</b><div class="muted">約 ${Math.floor(S.w*.62)} 隻採集蟻，自動 +${(Math.floor(S.w*.62)*.15).toFixed(1)}/秒</div></div><div class="resbox"><b>🥩 蛋白 ${Math.floor(S.protein)}</b><div class="muted">約 ${Math.floor(S.w*.10)} 隻獵食工蟻，自動取得少量蛋白</div></div><div class="resbox"><b>🐜 蚜蟲牧場 ×${S.ranches.aphid}</b><div class="muted">蜜露 ${Math.floor(S.honey)}</div><button data-act="aphid">12 蛋白建牧場</button></div><div class="resbox"><b>🐛 蛋白養殖場 Lv.${S.ranches.grubLv}　幼蟲群 ×${S.ranches.grub}</b><button data-act="grub">18 葉片擴建蛋白養殖</button></div>`;$('heroes').innerHTML=S.heroes.map(h=>`<div class="hero"><b>⭐ ${h.name} Lv.${h.lv}</b><div class="muted">XP ${h.xp} · 擊殺 ${h.k}</div></div>`).join('');draw()}
-window.breed=(t,c)=>{c=Math.max(3,Math.ceil(c*(1-Math.min(.35,S.ranches.grubLv*.025))));if(S.protein<c)return msg('🥩 昆蟲蛋白不足');S.protein-=c;S.troops[t]++;msg('育種完成：特殊兵種 +1');ui()};
-window.nectarTroop=(t,c)=>{if(S.honey<c)return msg('🍯 蜜露不足');S.honey-=c;S.troops[t]++;msg('高能個體培育完成');ui()};
+<div class="resbox"><b>💚 高能修復</b><div class="muted">下一場持續回血</div><button onclick="nectarBuff('regen',10)">🍯10 啟動</button></div>`;let fw=Math.max(1,Math.floor(S.w*.22));
+$('ranchInfo').innerHTML=`<div class="resbox"><b>🍄 菌圃轉換</b><div class="muted">${fw} 隻工蟻處理葉片。採集蟻越多 → 葉片越多 → 菌糧越快；前期轉換速度已提高。</div></div>`+`<div class="resbox"><b>🍃 葉片 ${Math.floor(S.leaf)}</b><div class="muted">約 ${Math.floor(S.w*.62)} 隻採集蟻，自動 +${(Math.floor(S.w*.62)*.15).toFixed(1)}/秒</div></div><div class="resbox"><b>🥩 蛋白 ${Math.floor(S.protein)}</b><div class="muted">約 ${Math.floor(S.w*.10)} 隻獵食工蟻，自動取得少量蛋白</div></div><div class="resbox"><b>🐜 蚜蟲牧場 ×${S.ranches.aphid}</b><div class="muted">蜜露 ${Math.floor(S.honey)}</div><button data-act="aphid">12 蛋白建牧場</button></div><div class="resbox"><b>🐛 蛋白養殖場 Lv.${S.ranches.grubLv}　幼蟲群 ×${S.ranches.grub}</b><button data-act="grub">${18+S.ranches.grubLv*12} 葉片擴建蛋白養殖</button></div>`;$('heroes').innerHTML=S.heroes.map(h=>`<div class="hero"><b>⭐ ${h.name} Lv.${h.lv}</b><div class="muted">XP ${h.xp} · 擊殺 ${h.k}</div></div>`).join('');draw()}
+window.breed=(t,c)=>{c=Math.max(3,Math.ceil(c*(1-Math.min(.25,S.ranches.grubLv*.02))));if(S.s<1)return msg('需要至少 1 隻普通兵蟻');if(S.protein<c)return msg('🥩 昆蟲蛋白不足');S.protein-=c;S.s--;S.troops[t]++;msg('育種完成：1 隻普通兵蟻轉化為特殊兵種');ui()};
+window.nectarTroop=(t,c)=>{if(S.s<1)return msg('需要至少 1 隻普通兵蟻');if(S.honey<c)return msg('🍯 蜜露不足');S.honey-=c;S.s--;S.troops[t]++;msg('高能育種完成：普通兵蟻轉化為特殊兵種');ui()};
 window.nectarBuff=(t,c)=>{if(S.honey<c)return msg('🍯 蜜露不足');S.honey-=c;S.buff[t]=90;msg('戰前能力已啟動');ui()};
 window.gatherLeaf=()=>{S.leaf+=8+Math.floor(Math.random()*7);msg('🍃 採集隊帶回葉片');ui()};window.gatherProtein=()=>{S.protein+=5+Math.floor(Math.random()*5);msg('🥩 覓食隊帶回蛋白');ui()};window.buildAphid=()=>{if(S.protein<12)return msg('蛋白不足');S.protein-=12;S.ranches.aphid++;ui()};window.buildGrub=()=>{if(S.leaf<18)return msg('葉片不足');S.leaf-=18;S.ranches.grub++;ui()};
-document.addEventListener('click',e=>{let b=e.target.closest('button');if(!b||!b.dataset.act)return;let a=b.dataset.act;if(a==='leaf'){S.leaf+=8+Math.floor(Math.random()*7);msg('🍃 採集隊帶回葉片')}if(a==='protein'){S.protein+=5+Math.floor(Math.random()*5);msg('🥩 覓食隊帶回蛋白')}if(a==='aphid'){if(S.protein<12)return msg('蛋白不足');S.protein-=12;S.ranches.aphid++;msg('建立蚜蟲牧場')}if(a==='grub'){if(S.leaf<18)return msg('葉片不足');S.leaf-=18;S.ranches.grub++;S.ranches.grubLv++;msg('🐛 蛋白養殖場升級')}ui()});
+document.addEventListener('click',e=>{let b=e.target.closest('button');if(!b||!b.dataset.act)return;let a=b.dataset.act;if(a==='leaf'){S.leaf+=8+Math.floor(Math.random()*7);msg('🍃 採集隊帶回葉片')}if(a==='protein'){S.protein+=5+Math.floor(Math.random()*5);msg('🥩 覓食隊帶回蛋白')}if(a==='aphid'){if(S.protein<12)return msg('蛋白不足');S.protein-=12;S.ranches.aphid++;msg('建立蚜蟲牧場')}if(a==='grub'){let c=18+S.ranches.grubLv*12;if(S.leaf<c)return msg('葉片不足，需要 '+c);S.leaf-=c;S.ranches.grub++;S.ranches.grubLv++;msg('🐛 蛋白養殖場升級')}ui()});
 
 function gameOver(){
  S.paused=true;
