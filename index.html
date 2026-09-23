@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>蟻后 REBORN v0.27.1</title>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>蟻后 REBORN v0.27.2</title>
 <style>*{box-sizing:border-box}body{margin:0;background:#0e120c;color:#eee6d3;font-family:-apple-system,"Noto Sans TC",sans-serif}header{position:sticky;top:0;z-index:5;background:#151a11;padding:10px;display:flex;gap:8px;overflow:auto;border-bottom:1px solid #5d5638}.p{background:#252b1d;border:1px solid #5b5b3e;border-radius:10px;padding:7px;white-space:nowrap}nav{position:fixed;bottom:0;left:0;right:0;z-index:6;background:#12160f;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:7px}button{background:#2b311f;color:#eee6d3;border:1px solid #706b48;border-radius:9px;padding:9px;font-weight:700}.page{display:none;padding:14px 14px 85px}.page.on{display:block}#worldPage{padding:0 0 75px;height:calc(100vh - 55px);position:relative}canvas{width:100%;height:100%;display:block}.hud{position:absolute;background:#11160edc;border:1px solid #625d3d;border-radius:13px;padding:10px;backdrop-filter:blur(8px)}#place{left:10px;top:10px}#colony{right:10px;top:10px;width:210px}#event{left:10px;bottom:85px;max-width:330px}.rates{display:flex;gap:4px;margin-top:6px}.rates span{background:#282c1e;padding:5px;border-radius:6px;font-size:11px}.muted{color:#aaa38f;font-size:12px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.card,.tree{background:#1b2117;border:1px solid #52543a;border-radius:13px;padding:11px}.skilltop{display:flex;gap:6px;overflow:auto;margin-bottom:10px}.trees{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:10px;min-width:720px;overflow:auto}.node{display:block;width:100%;text-align:left;margin:7px 0}.locked{opacity:.38}.max{border-color:#d8b653}.line{height:12px;border-left:2px solid #6b6240;margin-left:18px}.hero{border-left:4px solid #d87824}.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.slot{border:1px dashed #68624a;border-radius:7px;padding:5px;min-height:48px;font-size:10px}.magic{border-left:4px solid #4c83ff}.rare{border-left:4px solid #e6c63d}.set{border-left:4px solid #4bc76b}.unique{border-left:4px solid #bd8740}.charm{border-left:4px solid #a65dff}@media(max-width:700px){nav button{font-size:9px;padding:7px 1px}.hud{font-size:11px}#colony{width:175px}}.compare{display:grid;grid-template-columns:1fr 1fr;gap:6px}.good{color:#79e58b}
 .heroVisual{position:relative;height:170px;border-radius:14px;background:radial-gradient(circle at 50% 45%,#3b422b,#151a11 68%);overflow:hidden;margin:8px 0}
 .heroAnt{position:absolute;left:50%;top:50%;width:112px;height:54px;transform:translate(-50%,-50%)}
@@ -171,9 +171,29 @@ function pointCost(c){let n=classSpent(c)+S.free[c];return 3+Math.floor(n/3)*2+M
 function buyPoint(c){let used=classSpent(c)+S.free[c],cost=pointCost(c);if(used>=100)return log(cn[c]+'技能點已達100');if(S.x[c]<cost)return log('特化資源不足，需要 '+cost);S.x[c]-=cost;S.free[c]++;renderSkills();ui()}
 function add(c,pi,i){let p=pages[c][pi],k=c+':'+p[0]+':'+i,lv=S.sk[k]||0;if(lv>=20||!S.free[c]||classSpent(c)>=100)return;let prev=i===0?[]:(i<=2?[0]:i<=4?[1,2]:[3,4]);if(i>0&&(classSpent(c)<p[1][i][1]||!prev.some(n=>(S.sk[c+':'+p[0]+':'+n]||0)>0)))return;S.free[c]--;S.sk[k]=lv+1;renderSkills();ui()}
 function renderSkills(){
- $('skilltop').innerHTML=Object.keys(pages).map(c=>`<button onclick="cls='${c}';renderSkills()">${cn[c]}｜資源 ${S.x[c]}｜已投入 ${classSpent(c)}/100｜可用 ${S.free[c]}</button>`).join('');
+ let top=$('skilltop'),book=$('book');if(!top||!book)return;
+ if(!pages[cls])cls='melee';
+ top.innerHTML=['melee','range','magic'].map(c=>`<button class="${cls===c?'active':''}" onclick="cls='${c}';renderSkills()">${cn[c]}｜資源 ${Math.floor(S.x[c])}｜技能 ${classSpent(c)}/100｜可用 ${S.free[c]}</button>`).join('');
  let used=classSpent(cls),cost=pointCost(cls);
- $('book').innerHTML=`<div class="card"><b>${cn[cls]}技能點 ${used}/100</b><br>下一技能點：需要 <b>${cost}</b> ${cn[cls]}資源 <span class=muted>（兌換成本會持續遞增）</span><br><button onclick="buyPoint('${cls}')">兌換 1 技能點</button></div><div class="trees">${pages[cls].map((p,pi)=>`<div class="tree"><h3>${p[0]}</h3>${p[1].map((q,i)=>{let lv=S.sk[cls+':'+p[0]+':'+i]||0,prev=i===0?[]:(i<=2?[0]:i<=4?[1,2]:[3,4]),lock=i>0&&(used<q[1]||!prev.some(k=>(S.sk[cls+':'+p[0]+':'+k]||0)>0));let sn=skillNumbers(q[0],lv);return `${i?'<div class=line></div>':''}<button class="node ${lock?'locked':''} ${lv===20?'max':''}" onclick="add('${cls}',${pi},${i})"><b>${q[0]}</b>　Lv.${lv}/20<br><span>${sn.label} <small>[${sn.typeName}]</small>：<b>+${sn.cur}${sn.suffix}</b>${lv<20?` → 下一級 <b class="good">+${sn.next}${sn.suffix}</b>`:'　MAX'}</span><br><span class=muted>${q[2]}${i?' · 需求本職技能 '+q[1]:''}</span></button>`}).join('')}</div>`).join('')}</div>`
+ let trees=pages[cls].map((p,pi)=>{
+   let nodes=p[1].map((q,i)=>{
+     let key=cls+':'+p[0]+':'+i,lv=S.sk[key]||0;
+     let prev=i===0?[]:(i<=2?[0]:i<=4?[1,2]:[3,4]);
+     let lock=i>0&&(used<q[1]||!prev.some(k=>(S.sk[cls+':'+p[0]+':'+k]||0)>0));
+     let sc=skillScale[q[0]]||{unit:5,label:'技能效果',type:'percent',suffix:'%'};
+     let cur=Math.round(sc.unit*lv*100)/100,next=Math.round(sc.unit*(lv+1)*100)/100;
+     let tier=i===0?'基礎':i<=2?'中層 I':i<=4?'中層 II':'終極';
+     return `<div class="skillTier ${lock?'locked':''}">
+       <div class="tierLabel">${tier}</div>
+       <button class="node ${lock?'locked':''} ${lv>=20?'max':''}" ${lock?'disabled':''} onclick="add('${cls}',${pi},${i})">
+       <b>${q[0]}</b>　Lv.${lv}/20<br>
+       <span>${q[2]}</span><br>
+       <span class="muted">${sc.label} [${sc.type==='flat'?'固定值':'百分比'}]：+${cur}${sc.suffix}${lv<20?` → +${next}${sc.suffix}`:'　MAX'}${i?` · 需求本職 ${q[1]} 點`:''}</span>
+       </button></div>`
+   }).join('');
+   return `<div class="tree"><h3>${p[0]}</h3>${nodes}</div>`
+ }).join('');
+ book.innerHTML=`<div class="card"><b>${cn[cls]}技能點：${used}/100</b><br>可用 ${S.free[cls]} 點　｜　下一點需要 <b>${cost}</b> ${cn[cls]}資源<br><button onclick="buyPoint('${cls}')">兌換 1 技能點</button></div><div class="trees">${trees}</div>`;
 }
 function gearVisual(hero){let e=hero.e||{},m=[];if(e['頭盔'])m.push('<span class="gearMark gm-head">⛑️</span>');if(e['武器'])m.push('<span class="gearMark gm-weapon">⚔️</span>');if(e['胸甲'])m.push('<span class="gearMark gm-chest">🛡️</span>');if(e['護身符'])m.push('<span class="gearMark gm-amulet">◆</span>');if(e['鞋子'])m.push('<span class="gearMark gm-boots">✦</span>');return `<div class="heroVisual"><div class="heroNameplate">${hero.name} · ${cn[hero.c]}</div><div class="heroAnt"><i class="seg abd"></i><i class="seg thor"></i><i class="seg head"></i><i class="leg l1"></i><i class="leg l2"></i><i class="leg l3"></i><i class="leg r1"></i><i class="leg r2"></i><i class="leg r3"></i></div>${m.join('')}</div>`}
 function renderHeroes(){let box=$('heroes');if(!box)return;box.innerHTML=S.heroes.map(hero=>{let st=heroStats(hero);return `<div class="card hero">${gearVisual(hero)}<div>Lv.${hero.lv} XP ${hero.xp} · 兵蟻群體加成 +${Math.round(armyBonus()*100)}%</div><div><b>ATK ${st.atk.toFixed(1)}</b> · HP ${st.hp.toFixed(0)} · CRIT ${st.crit.toFixed(1)} · SPD ${st.spd.toFixed(2)}</div><div class=slots>${['頭盔','胸甲','武器','副手','腰帶','手套','鞋子','護身符','戒指1','戒指2'].map(s=>`<div class=slot>${s}<br>${hero.e[s]?hero.e[s].name:'—'}</div>`).join('')}</div></div>`}).join('')}
@@ -211,4 +231,5 @@ ui();
 draw();
 requestAnimationFrame(loop);
 try{renderSkills()}catch(err){console.error('skill UI',err)}
+document.addEventListener('DOMContentLoaded',()=>{try{renderSkills()}catch(e){console.error(e)}});
 </script></body></html>
