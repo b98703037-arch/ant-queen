@@ -1,8 +1,18 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>蟻后 REBORN v0.21</title>
-<style>*{box-sizing:border-box}body{margin:0;background:#0e120c;color:#eee6d3;font-family:-apple-system,"Noto Sans TC",sans-serif}header{position:sticky;top:0;z-index:5;background:#151a11;padding:10px;display:flex;gap:8px;overflow:auto;border-bottom:1px solid #5d5638}.p{background:#252b1d;border:1px solid #5b5b3e;border-radius:10px;padding:7px;white-space:nowrap}nav{position:fixed;bottom:0;left:0;right:0;z-index:6;background:#12160f;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:7px}button{background:#2b311f;color:#eee6d3;border:1px solid #706b48;border-radius:9px;padding:9px;font-weight:700}.page{display:none;padding:14px 14px 85px}.page.on{display:block}#worldPage{padding:0 0 75px;height:calc(100vh - 55px);position:relative}canvas{width:100%;height:100%;display:block}.hud{position:absolute;background:#11160edc;border:1px solid #625d3d;border-radius:13px;padding:10px;backdrop-filter:blur(8px)}#place{left:10px;top:10px}#colony{right:10px;top:10px;width:210px}#event{left:10px;bottom:85px;max-width:330px}.rates{display:flex;gap:4px;margin-top:6px}.rates span{background:#282c1e;padding:5px;border-radius:6px;font-size:11px}.muted{color:#aaa38f;font-size:12px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.card,.tree{background:#1b2117;border:1px solid #52543a;border-radius:13px;padding:11px}.skilltop{display:flex;gap:6px;overflow:auto;margin-bottom:10px}.trees{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:10px;min-width:720px;overflow:auto}.node{display:block;width:100%;text-align:left;margin:7px 0}.locked{opacity:.38}.max{border-color:#d8b653}.line{height:12px;border-left:2px solid #6b6240;margin-left:18px}.hero{border-left:4px solid #d87824}.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.slot{border:1px dashed #68624a;border-radius:7px;padding:5px;min-height:48px;font-size:10px}.magic{border-left:4px solid #4c83ff}.rare{border-left:4px solid #e6c63d}.set{border-left:4px solid #4bc76b}.unique{border-left:4px solid #bd8740}.charm{border-left:4px solid #a65dff}@media(max-width:700px){nav button{font-size:9px;padding:7px 1px}.hud{font-size:11px}#colony{width:175px}}.compare{display:grid;grid-template-columns:1fr 1fr;gap:6px}.good{color:#79e58b}</style></head><body>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>蟻后 REBORN v0.24</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#0e120c;color:#eee6d3;font-family:-apple-system,"Noto Sans TC",sans-serif}header{position:sticky;top:0;z-index:5;background:#151a11;padding:10px;display:flex;gap:8px;overflow:auto;border-bottom:1px solid #5d5638}.p{background:#252b1d;border:1px solid #5b5b3e;border-radius:10px;padding:7px;white-space:nowrap}nav{position:fixed;bottom:0;left:0;right:0;z-index:6;background:#12160f;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:7px}button{background:#2b311f;color:#eee6d3;border:1px solid #706b48;border-radius:9px;padding:9px;font-weight:700}.page{display:none;padding:14px 14px 85px}.page.on{display:block}#worldPage{padding:0 0 75px;height:calc(100vh - 55px);position:relative}canvas{width:100%;height:100%;display:block}.hud{position:absolute;background:#11160edc;border:1px solid #625d3d;border-radius:13px;padding:10px;backdrop-filter:blur(8px)}#place{left:10px;top:10px}#colony{right:10px;top:10px;width:210px}#event{left:10px;bottom:85px;max-width:330px}.rates{display:flex;gap:4px;margin-top:6px}.rates span{background:#282c1e;padding:5px;border-radius:6px;font-size:11px}.muted{color:#aaa38f;font-size:12px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.card,.tree{background:#1b2117;border:1px solid #52543a;border-radius:13px;padding:11px}.skilltop{display:flex;gap:6px;overflow:auto;margin-bottom:10px}.trees{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:10px;min-width:720px;overflow:auto}.node{display:block;width:100%;text-align:left;margin:7px 0}.locked{opacity:.38}.max{border-color:#d8b653}.line{height:12px;border-left:2px solid #6b6240;margin-left:18px}.hero{border-left:4px solid #d87824}.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.slot{border:1px dashed #68624a;border-radius:7px;padding:5px;min-height:48px;font-size:10px}.magic{border-left:4px solid #4c83ff}.rare{border-left:4px solid #e6c63d}.set{border-left:4px solid #4bc76b}.unique{border-left:4px solid #bd8740}.charm{border-left:4px solid #a65dff}@media(max-width:700px){nav button{font-size:9px;padding:7px 1px}.hud{font-size:11px}#colony{width:175px}}.compare{display:grid;grid-template-columns:1fr 1fr;gap:6px}.good{color:#79e58b}
+.heroVisual{position:relative;height:170px;border-radius:14px;background:radial-gradient(circle at 50% 45%,#3b422b,#151a11 68%);overflow:hidden;margin:8px 0}
+.heroAnt{position:absolute;left:50%;top:50%;width:112px;height:54px;transform:translate(-50%,-50%)}
+.heroAnt .seg{position:absolute;top:50%;transform:translateY(-50%);border-radius:50%;background:#713e22;border:2px solid #bc8150}
+.heroAnt .abd{left:0;width:48px;height:36px}.heroAnt .thor{left:43px;width:34px;height:28px}.heroAnt .head{left:72px;width:34px;height:31px}
+.heroAnt .leg{position:absolute;width:44px;height:2px;background:#a36c43;transform-origin:left center;left:49px}
+.heroAnt .l1{top:17px;transform:rotate(-35deg)}.heroAnt .l2{top:26px;transform:rotate(15deg)}.heroAnt .l3{top:34px;transform:rotate(38deg)}
+.heroAnt .r1{top:17px;transform:rotate(215deg)}.heroAnt .r2{top:26px;transform:rotate(165deg)}.heroAnt .r3{top:34px;transform:rotate(142deg)}
+.gearMark{position:absolute;font-size:22px;filter:drop-shadow(0 0 5px #000);z-index:3}.gm-head{left:67%;top:28%}.gm-weapon{left:76%;top:48%}.gm-chest{left:46%;top:35%}.gm-amulet{left:58%;top:53%}.gm-boots{left:45%;top:68%}
+.heroNameplate{position:absolute;left:8px;top:8px;background:#0a0d09bb;border-radius:8px;padding:4px 7px;font-size:11px}
+</style></head><body>
 <header><div class="p">🌿 <b id="r0">30</b></div><div class="p">🦷 顎晶 <b id="r1">1</b></div><div class="p">🎯 腺晶 <b id="r2">0</b></div><div class="p">✨ 靈質 <b id="r3">0</b></div><div class="p">🐜 <b id="pop">11</b></div><div class="p">技能 <b id="sp">1</b>/100</div></header>
 <section id="worldPage" class="page on"><canvas id="world"></canvas><div id="place" class="hud"><b id="pn"></b><div class="rates"><span id="pp0"></span><span id="pp1"></span><span id="pp2"></span><span id="pp3"></span></div><div class="muted">視野 <b id="vis"></b>m · 遠處被迷霧覆蓋</div></div><div id="colony" class="hud"><b>蟻群</b><div>工蟻 <b id="w"></b> · 兵蟻 <b id="s"></b></div><div class="muted">工蟻自動採集；點地表資源手動拾取；點生物指定攻擊。</div><button id="egg">🥚 產卵 ×10 · 🌿 <span id="ec"></span></button><div class="muted">60秒內連續產卵：10→20→40→80→160…</div></div><div id="event" class="hud">蟻后在世界邊緣建立了第一座巢穴。</div></section>
-<section id="battlePage" class="page"><h2>⚔️ 戰鬥</h2><div class="card"><canvas id="battle" style="height:330px;border-radius:12px;background:#14180f"></canvas><div id="battleInfo"></div></div></section><section id="skillPage" class="page"><h2>技能書</h2><div class="muted">三職業 × 三頁；每技能最高20級；總技能點上限100。用對應特化資源換技能點。</div><div id="skilltop" class="skilltop"></div><div id="book"></div></section>
+<section id="battlePage" class="page"><h2>⚔️ 戰鬥</h2><div class="card"><canvas id="battle" style="height:330px;border-radius:12px;background:#14180f"></canvas><div id="battleInfo"></div></div></section><section id="skillPage" class="page"><h2>技能書</h2><div class="muted">三職業 × 三頁；每技能最高20級；總技能點上限100。用對應特化資源換技能點。<br><b>每個技能直接顯示「目前實際效果 → 下一級效果」，並標示【固定值】或【百分比】。計算順序：基礎值＋固定加成 → 百分比加成 → 兵蟻軍團加成。</b></div><div id="skilltop" class="skilltop"></div><div id="book"></div></section>
 <section id="heroPage" class="page"><h2>英雄蟻 · 最多3隻</h2><div id="heroes"></div></section>
 <section id="lootPage" class="page"><h2>戰利品</h2><div class="muted">藍1詞綴｜黃2詞綴｜綠套裝｜暗金特殊能力｜紫色巢穴護符</div><div id="loot"></div></section>
 <section id="movePage" class="page"><h2>遷移巢穴</h2><div id="places" class="cards"></div></section>
@@ -13,6 +23,50 @@ const $=x=>document.getElementById(x);
 const places=[['枯葉林緣',0,[.8,.1,.05,.05],'安全而貧瘠'],['碎石溪岸',80,[.58,.22,.15,.05],'近戰資源增加'],['高草獵場',180,[.45,.15,.3,.1],'遠距資源豐富'],['雷擊腐木',350,[.34,.16,.15,.35],'魔法資源富集'],['古樹根城',650,[.3,.25,.22,.23],'後期富饒地帶']];
 const pages={melee:[['巨顎',[['硬化大顎',0,'近戰傷害'],['連續撕咬',3,'連擊'],['處決本能',8,'斬殺'],['狂戰費洛蒙',13,'擊殺加速']]],['護衛',[['甲殼強化',0,'生命'],['兵蟻屏障',4,'降低兵蟻戰損'],['血肉城牆',9,'強化兵蟻→英雄的能力轉換'],['軍團共鳴',14,'每級降低兵蟻加成的遞減率']]],['神速',[['迅捷足節',0,'移速'],['二連擊',3,'追加攻擊'],['殘影突襲',8,'切後排'],['百裂',14,'多段連擊']]]],range:[['酸液',[['酸液共鳴',0,'英雄獲得遠距酸液攻擊'],['腐蝕彈',3,'破甲'],['酸霧',8,'範圍傷害'],['溶甲洪流',14,'群體破甲']]],['狙擊',[['感知觸角',0,'射程'],['弱點瞄準',4,'暴擊'],['穿透射擊',9,'穿透'],['致命腺針',15,'Boss單體']]],['蛛絲',[['黏液絲',0,'緩速'],['蛛網束縛',4,'定身'],['震動定位',9,'命中與視野'],['天羅地網',15,'群體控制']]]],magic:[['雷霆',[['電荷腺體',0,'放電'],['連鎖閃電',4,'彈跳'],['雷暴',10,'區域落雷'],['雷神蟻',16,'雷霆化身']]],['烈焰',[['燃燒酸',0,'燃燒'],['爆燃',4,'死亡爆炸'],['火焰噴射',10,'錐形攻擊'],['火海',16,'燃燒區域']]],['生命',[['菌絲護群',0,'降低兵蟻戰損'],['戰地拖救',4,'救援'],['群體再生',10,'群補'],['靈魂寄宿',16,'跨周目']]]]};
 const cn={melee:'🦷近戰',range:'🎯遠距',magic:'✨魔法'};
+
+const skillScale={
+ '硬化大顎':{unit:10,label:'近戰傷害',type:'flat',suffix:''},
+ '連續撕咬':{unit:2,label:'連擊機率',type:'percent',suffix:'%'},
+ '處決本能':{unit:2,label:'斬殺傷害',type:'percent',suffix:'%'},
+ '狂戰費洛蒙':{unit:3,label:'擊殺後攻速',type:'percent',suffix:'%'},
+ '甲殼強化':{unit:20,label:'生命',type:'flat',suffix:''},
+ '兵蟻屏障':{unit:1.5,label:'兵蟻戰損降低',type:'percent',suffix:'%'},
+ '血肉城牆':{unit:2,label:'軍團能力轉換',type:'percent',suffix:'%'},
+ '軍團共鳴':{unit:3,label:'遞減率改善',type:'percent',suffix:'%'},
+ '迅捷足節':{unit:.08,label:'移動速度',type:'flat',suffix:''},
+ '二連擊':{unit:2,label:'追加攻擊機率',type:'percent',suffix:'%'},
+ '殘影突襲':{unit:8,label:'突襲傷害',type:'flat',suffix:''},
+ '百裂':{unit:6,label:'多段攻擊傷害',type:'percent',suffix:'%'},
+ '酸液共鳴':{unit:6,label:'酸液傷害',type:'flat',suffix:''},
+ '腐蝕彈':{unit:3,label:'護甲削減',type:'percent',suffix:'%'},
+ '酸霧':{unit:5,label:'酸霧傷害',type:'flat',suffix:''},
+ '溶甲洪流':{unit:3,label:'群體破甲',type:'percent',suffix:'%'},
+ '感知觸角':{unit:1,label:'射程',type:'flat',suffix:'m'},
+ '弱點瞄準':{unit:2,label:'暴擊率',type:'percent',suffix:'%'},
+ '穿透射擊':{unit:3,label:'穿透傷害',type:'percent',suffix:'%'},
+ '致命腺針':{unit:12,label:'Boss額外傷害',type:'flat',suffix:''},
+ '黏液絲':{unit:2,label:'緩速',type:'percent',suffix:'%'},
+ '蛛網束縛':{unit:1.5,label:'定身機率',type:'percent',suffix:'%'},
+ '震動定位':{unit:1,label:'視野',type:'flat',suffix:'m'},
+ '天羅地網':{unit:.08,label:'控制時間',type:'flat',suffix:'秒'},
+ '電荷腺體':{unit:5,label:'雷電傷害',type:'flat',suffix:''},
+ '連鎖閃電':{unit:4,label:'連鎖傷害',type:'percent',suffix:'%'},
+ '雷暴':{unit:9,label:'雷暴傷害',type:'flat',suffix:''},
+ '雷神蟻':{unit:8,label:'雷霆傷害',type:'percent',suffix:'%'},
+ '燃燒酸':{unit:5,label:'燃燒傷害',type:'flat',suffix:''},
+ '爆燃':{unit:4,label:'爆炸傷害',type:'percent',suffix:'%'},
+ '火焰噴射':{unit:8,label:'火焰傷害',type:'flat',suffix:''},
+ '火海':{unit:7,label:'火海傷害',type:'percent',suffix:'%'},
+ '菌絲護群':{unit:1.5,label:'兵蟻戰損降低',type:'percent',suffix:'%'},
+ '戰地拖救':{unit:1,label:'救回兵蟻機率',type:'percent',suffix:'%'},
+ '群體再生':{unit:4,label:'每秒恢復生命',type:'flat',suffix:''},
+ '靈魂寄宿':{unit:4,label:'傳承能力',type:'percent',suffix:'%'}
+};
+function skillNumbers(name,lv){
+ let d=skillScale[name]||{unit:2,label:'效果',type:'percent',suffix:'%'},cur=d.unit*lv,next=d.unit*Math.min(20,lv+1);
+ let f=n=>(Math.round(n*100)/100).toString();
+ return {cur:f(cur),next:f(next),label:d.label,suffix:d.suffix,type:d.type,typeName:d.type==='flat'?'固定值':'百分比'}
+}
 let S={r:30,x:{melee:1,range:0,magic:0},w:8,s:2,loc:0,vis:32,chain:0,lastEgg:0,spent:1,free:{melee:0,range:0,magic:0},sk:{},heroes:[{name:'赤顎',c:'melee',lv:1,xp:0,e:{},base:{atk:10,hp:100,spd:1,crit:5}}],loot:[],battle:null,hiddenBoss:{range:false,magic:false},kills:0,t:0};
 Object.keys(pages).forEach(c=>pages[c].forEach(p=>p[1].forEach((q,i)=>S.sk[c+':'+p[0]+':'+i]=0)));S.sk['melee:巨顎:0']=1;
 let ents=[],cls='melee',last=performance.now();
@@ -20,24 +74,99 @@ function log(t){$('event').innerHTML=t+'<br>'+$('event').innerHTML.slice(0,300)}
 function eggCost(){if(performance.now()-S.lastEgg>60000)S.chain=0;return 10*2**S.chain}
 function roll(m=1){let q=Math.random(),p=places[S.loc][2];if(q<p[0])S.r+=Math.ceil(3*m);else if(q<p[0]+p[1])S.x.melee+=Math.ceil(m);else if(q<p[0]+p[1]+p[2])S.x.range+=Math.ceil(m);else S.x.magic+=Math.ceil(m)}
 function spawn(){let cr=Math.random()<.32,a=Math.random()*6.283,d=10+Math.random()*S.vis*.8;let rr=Math.random(),tier=cr&&S.kills>8&&rr<.025?'boss':cr&&rr<.10?'champion':cr&&rr<.28?'elite':'normal',hp=cr?(8+S.loc*10)*({normal:1,elite:1.7,champion:2.6,boss:5}[tier]):1;ents.push({cr,x:50+Math.cos(a)*d,y:50+Math.sin(a)*d,hp,max:hp,tier,name:['蟑螂','蜘蛛','甲蟲','螳螂','蜈蚣'][Math.min(4,S.loc+Math.floor(Math.random()*2))]})}
-function lootRoll(tier='normal'){let boost=tier==='boss'?.08:tier==='champion'?.035:tier==='elite'?.015:0,r=Math.random()-boost,rar=r<.006?'unique':r<.018?'set':r<.04?'charm':r<.10?'rare':r<.24?'magic':null;if(!rar)return;let slots=['頭盔','胸甲','武器','副手','腰帶','手套','鞋子','護身符','戒指1','戒指2'],n={magic:'魔法',rare:'稀有',set:'套裝',unique:'暗金',charm:'護符'},slot=rar==='charm'?'巢穴':slots[Math.floor(Math.random()*slots.length)],count=rar==='magic'?1:rar==='rare'?2:rar==='unique'?3:rar==='set'?2:1,stats={};for(let i=0;i<count;i++){let k=['atk','hp','crit','spd'][Math.floor(Math.random()*4)],v=k==='hp'?5+Math.floor(Math.random()*16):k==='spd'?.03+Math.random()*.07:1+Math.floor(Math.random()*5);stats[k]=(stats[k]||0)+v}let o={rar,name:n[rar]+'·'+['蟻顎','甲片','觸角','菌絲'][Math.floor(Math.random()*4)],slot,stats};S.loot.unshift(o);log('💎 '+o.name+' 掉落')}
+function lootRoll(tier='normal'){let boost=tier==='boss'?.08:tier==='champion'?.035:tier==='elite'?.015:0,r=Math.random()-boost,rar=r<.006?'unique':r<.018?'set':r<.04?'charm':r<.10?'rare':r<.24?'magic':null;if(!rar)return;let slots=['頭盔','胸甲','武器','副手','腰帶','手套','鞋子','護身符','戒指1','戒指2'],n={magic:'魔法',rare:'稀有',set:'套裝',unique:'暗金',charm:'護符'},slot=rar==='charm'?'巢穴':slots[Math.floor(Math.random()*slots.length)],count=rar==='magic'?1:rar==='rare'?2:rar==='unique'?3:rar==='set'?2:1,stats={};for(let i=0;i<count;i++){let k=['atk','hp','crit','spd'][Math.floor(Math.random()*4)],v=k==='hp'?5+Math.floor(Math.random()*16):k==='spd'?.03+Math.random()*.07:1+Math.floor(Math.random()*5);stats[k]=(stats[k]||0)+v}let pctStats={};if((rar==='rare'||rar==='unique'||rar==='set')&&Math.random()<.55){let pk=['atk','hp','crit','spd'][Math.floor(Math.random()*4)];pctStats[pk]=2+Math.floor(Math.random()*9)}
+let o={rar,name:n[rar]+'·'+['蟻顎','甲片','觸角','菌絲'][Math.floor(Math.random()*4)],slot,stats,pctStats};S.loot.unshift(o);log('💎 '+o.name+' 掉落')}
 function equipItem(i){let o=S.loot[i],hero=S.heroes[0];if(!o||o.rar==='charm')return;hero.e[o.slot]=o;renderLoot();renderHeroes();ui()}
-function statText(o){return Object.entries(o.stats||{}).map(([k,v])=>`${{atk:'攻擊',hp:'生命',crit:'暴擊',spd:'速度'}[k]} +${k==='spd'?(v*100).toFixed(0)+'%':v}`).join(' · ')}
+function statText(o){let names={atk:'攻擊',hp:'生命',crit:'暴擊',spd:'速度'},a=Object.entries(o.stats||{}).map(([k,v])=>`${names[k]} +${k==='spd'?(Math.round(v*100)/100):v} [固定]`),b=Object.entries(o.pctStats||{}).map(([k,v])=>`${names[k]} +${v}% [百分比]`);return a.concat(b).join(' · ')}
 function armyBonus(){let n=S.s,base=Math.min(.85,.12*Math.log(1+n/7)),mastery=(S.sk['melee:護衛:3']||0)*.006;return Math.min(1.15,base*(1+mastery))}
-function heroStats(hero,item=null){let b=hero.base||{atk:10,hp:100,spd:1,crit:5},o={...b},bonus=armyBonus(),eq=Object.values(hero.e||{});if(item)eq.push(item);eq.forEach(q=>{if(q)Object.entries(q.stats||{}).forEach(([k,v])=>o[k]=(o[k]||0)+v)});Object.keys(o).forEach(k=>o[k]*=1+bonus);return o}
-function startBattle(e){if(S.battle)return;if(!S.s)return log('沒有兵蟻可以戰鬥');let hs=heroStats(S.heroes[0]);S.battle={e,enemyHP:e.hp,enemyMax:e.hp,army:S.s,armyStart:S.s,heroAtk:hs.atk,t:0};document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));$('battlePage').classList.add('on');log('⚔️ '+e.name+' 戰鬥開始')}
+function heroStats(hero,item=null){
+ let base=hero.base||{atk:10,hp:100,spd:1,crit:5},o={...base},flat={atk:0,hp:0,spd:0,crit:0},pct={atk:0,hp:0,spd:0,crit:0};
+ let eq=Object.values(hero.e||{});if(item)eq.push(item);
+ eq.forEach(q=>{if(!q)return;Object.entries(q.stats||{}).forEach(([k,v])=>flat[k]=(flat[k]||0)+v);Object.entries(q.pctStats||{}).forEach(([k,v])=>pct[k]=(pct[k]||0)+v)});
+ if(hero.c==='melee'){
+   flat.atk+=(S.sk['melee:巨顎:0']||0)*10;
+   flat.hp+=(S.sk['melee:護衛:0']||0)*20;
+   pct.spd+=(S.sk['melee:神速:0']||0)*3;
+   pct.crit+=(S.sk['melee:神速:1']||0)*2;
+ }
+ if(hero.c==='range'){
+   flat.atk+=(S.sk['range:酸液:0']||0)*6;
+   pct.crit+=(S.sk['range:狙擊:1']||0)*2;
+ }
+ if(hero.c==='magic'){
+   flat.atk+=(S.sk['magic:雷霆:0']||0)*5+(S.sk['magic:烈焰:0']||0)*5;
+   flat.hp+=(S.sk['magic:生命:2']||0)*4;
+ }
+ Object.keys(o).forEach(k=>o[k]=(o[k]+(flat[k]||0))*(1+(pct[k]||0)/100));
+ let army=armyBonus();Object.keys(o).forEach(k=>o[k]*=1+army);
+ return o
+}
+function startBattle(e){if(S.battle)return;if(!S.s)return log('沒有兵蟻可以戰鬥');let heroAtk=S.heroes.reduce((sum,h)=>sum+heroStats(h).atk,0);S.battle={e,enemyHP:e.hp,enemyMax:e.hp,army:S.s,armyStart:S.s,heroAtk,t:0};document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));$('battlePage').classList.add('on');log('⚔️ '+e.name+' 戰鬥開始')}
 function unlockHero(){if(S.heroes.length>=3)return;let c=S.heroes.length===1?'range':'magic',name=c==='range'?'銀針':'星火';S.heroes.push({name,c,lv:1,xp:0,e:{},base:{atk:c==='range'?11:12,hp:95,spd:1.05,crit:7}});log('👑 隱藏 Boss 被擊敗：獲得 '+name+' 英雄蟻！')}
-function battleStep(dt){let B=S.battle;if(!B)return;B.t+=dt;let m={normal:1,elite:1.35,champion:1.8,boss:2.8}[B.e.tier];if(Math.random()<dt*1.35)B.enemyHP-=B.heroAtk*(.7+Math.random()*.6);if(Math.random()<dt*.72*m&&B.army>0)B.army=Math.max(0,B.army-Math.max(1,Math.floor(m*(.5+Math.random()*1.4))));if(B.enemyHP<=0){S.s=B.army;S.kills++;roll(2+S.loc+(B.e.tier==='boss'?4:0));lootRoll(B.e.tier);S.heroes.forEach(h=>h.xp+=5+S.loc*2);ents=ents.filter(q=>q!==B.e);let boss=B.e.tier==='boss';S.battle=null;if(boss)unlockHero();log('🏆 勝利！兵蟻存活 '+S.s);ui()}else if(B.army<=0){S.s=0;S.battle=null;log('⚠️ 兵蟻全滅；英雄蟻撤退，不會死亡。');ui()}}
-function drawBattle(){let B=S.battle,c=$('battle');if(!c)return;let d=Math.min(2,devicePixelRatio||1),w=c.clientWidth,h=c.clientHeight;if(c.width!=w*d||c.height!=h*d){c.width=w*d;c.height=h*d}let x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);x.fillStyle='#242b1b';x.fillRect(0,0,w,h);if(!B){x.fillStyle='#aaa';x.font='16px sans-serif';x.fillText('在世界地圖點擊生物開始戰鬥',20,40);$('battleInfo').innerHTML='';return}for(let i=0;i<Math.min(50,B.army);i++){let a=i/Math.min(50,B.army)*6.28,r=55+(i%5)*7;x.fillStyle=i===0?'#e58b2c':'#6b3a20';x.beginPath();x.ellipse(w*.68+Math.cos(a+B.t*.25)*r,h*.5+Math.sin(a+B.t*.25)*r*.55,5,3,a,0,7);x.fill()}let col={normal:'#6d4a2c',elite:'#3979d5',champion:'#d6ad32',boss:'#a24fd0'}[B.e.tier];x.fillStyle=col;x.beginPath();x.ellipse(w*.68,h*.5,B.e.tier==='boss'?58:35,B.e.tier==='boss'?34:22,0,0,7);x.fill();x.fillStyle='#24100d';x.fillRect(w*.48,25,w*.42,10);x.fillStyle=col;x.fillRect(w*.48,25,w*.42*Math.max(0,B.enemyHP/B.enemyMax),10);$('battleInfo').innerHTML=`<b>${B.e.name}</b> · ${B.e.tier.toUpperCase()} · HP ${Math.ceil(B.enemyHP)}/${Math.ceil(B.enemyMax)}<br>兵蟻 ${B.army}/${B.armyStart} · 英雄能力 +${Math.round(armyBonus()*100)}%`}
+function battleStep(dt){let B=S.battle;if(!B)return;B.t+=dt;let m={normal:1,elite:1.35,champion:1.8,boss:2.8}[B.e.tier];if(Math.random()<dt*1.35)B.enemyHP-=B.heroAtk*(.7+Math.random()*.6);if(Math.random()<dt*.72*m&&B.army>0)B.army=Math.max(0,B.army-Math.max(1,Math.floor(m*(.5+Math.random()*1.4))));if(B.enemyHP<=0){S.s=B.army;S.kills++;roll(2+S.loc+(B.e.tier==='boss'?4:0));lootRoll(B.e.tier);S.heroes.forEach(h=>h.xp+=5+S.loc*2);ents=ents.filter(q=>q!==B.e);let boss=B.e.tier==='boss';S.battle=null;if(boss)unlockHero();log('🏆 勝利！兵蟻存活 '+S.s);ui();setTimeout(()=>{document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));$('worldPage').classList.add('on')},650)}else if(B.army<=0){S.s=0;S.battle=null;log('⚠️ 兵蟻全滅；英雄蟻撤退，不會死亡。');ui();setTimeout(()=>{document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));$('worldPage').classList.add('on')},650)}}
+function drawAnt(ctx,px,py,scale,color,dir=1,hero=false,gear=null){
+ ctx.save();ctx.translate(px,py);ctx.scale(dir*scale,scale);
+ ctx.strokeStyle='#b47c4e';ctx.lineWidth=1.4/scale;
+ for(let yy of [-6,0,6]){ctx.beginPath();ctx.moveTo(-1,yy);ctx.lineTo(-13,yy-8);ctx.stroke();ctx.beginPath();ctx.moveTo(3,yy);ctx.lineTo(14,yy+8);ctx.stroke()}
+ ctx.fillStyle=color;ctx.strokeStyle=hero?'#f0c96a':'#a56d43';ctx.lineWidth=hero?2/scale:1/scale;
+ [[-10,0,9,7],[1,0,7,6],[11,0,6,6]].forEach(z=>{ctx.beginPath();ctx.ellipse(z[0],z[1],z[2],z[3],0,0,7);ctx.fill();ctx.stroke()});
+ if(hero){ctx.fillStyle='#ffd66c';ctx.beginPath();ctx.arc(11,-1,2,0,7);ctx.fill()}
+ if(gear&&gear['武器']){ctx.strokeStyle='#e7e1c5';ctx.lineWidth=2/scale;ctx.beginPath();ctx.moveTo(15,-3);ctx.lineTo(27,-11);ctx.stroke()}
+ if(gear&&gear['頭盔']){ctx.strokeStyle='#d6ad57';ctx.beginPath();ctx.arc(11,-1,8,3.5,5.9);ctx.stroke()}
+ if(gear&&gear['胸甲']){ctx.strokeStyle='#91a6ad';ctx.lineWidth=3/scale;ctx.beginPath();ctx.arc(1,0,8,1.4,4.8);ctx.stroke()}
+ ctx.restore()
+}
+function drawEnemy(ctx,e,px,py,t){
+ let col={normal:'#75492b',elite:'#367fe0',champion:'#dfb531',boss:'#a74fd4'}[e.tier]||'#75492b',boss=e.tier==='boss',sc=boss?1.6:e.tier==='champion'?1.3:e.tier==='elite'?1.15:1;
+ ctx.save();ctx.translate(px,py);ctx.scale(sc,sc);ctx.fillStyle=col;ctx.strokeStyle=boss?'#f3c3ff':'#d8ad77';ctx.lineWidth=2;
+ ctx.beginPath();ctx.ellipse(-13,0,19,13,0,0,7);ctx.fill();ctx.stroke();ctx.beginPath();ctx.ellipse(11,0,14,11,0,0,7);ctx.fill();ctx.stroke();
+ for(let y of [-8,0,8]){ctx.beginPath();ctx.moveTo(-6,y);ctx.lineTo(-29,y-12);ctx.stroke();ctx.beginPath();ctx.moveTo(6,y);ctx.lineTo(29,y+12);ctx.stroke()}
+ if(e.tier!=='normal'){ctx.globalAlpha=.25+.12*Math.sin(t*4);ctx.strokeStyle=col;ctx.lineWidth=8;ctx.beginPath();ctx.arc(0,0,34,0,7);ctx.stroke()}
+ ctx.restore()
+}
+function drawBattle(){
+ let B=S.battle,c=$('battle');if(!c)return;let d=Math.min(2,devicePixelRatio||1),w=c.clientWidth,h=c.clientHeight;if(c.width!=w*d||c.height!=h*d){c.width=w*d;c.height=h*d}
+ let x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);
+ let g=x.createLinearGradient(0,0,w,h);g.addColorStop(0,'#26321d');g.addColorStop(.55,'#302819');g.addColorStop(1,'#17130e');x.fillStyle=g;x.fillRect(0,0,w,h);
+ // roots / stones
+ x.globalAlpha=.25;x.strokeStyle='#8a7046';x.lineWidth=8;x.beginPath();x.moveTo(0,h*.18);x.bezierCurveTo(w*.25,h*.28,w*.3,h*.05,w*.58,h*.2);x.stroke();x.globalAlpha=1;
+ if(!B){x.fillStyle='#aaa';x.font='16px sans-serif';x.fillText('在世界地圖點擊生物開始戰鬥',20,40);$('battleInfo').innerHTML='';return}
+ // all unlocked heroes, clearly separate from soldier swarm
+ S.heroes.forEach((hero,i)=>{let yy=h*(.28+i*.22);drawAnt(x,w*.16,yy,1.55,['#d47a2c','#5f9fe7','#ad68db'][i]||'#d47a2c',1,true,hero.e);x.fillStyle='#f0dfbd';x.font='bold 12px sans-serif';x.fillText(hero.name,w*.08,yy-25)});
+ // soldier formation
+ let count=Math.min(60,B.army),cols=10;
+ for(let i=0;i<count;i++){let row=Math.floor(i/cols),col=i%cols,px=w*.31+col*11+(row%2)*5,py=h*.31+row*18;drawAnt(x,px,py,.58,'#6d3d24',1,false,null)}
+ // enemy on right
+ drawEnemy(x,B.e,w*.78,h*.5,B.t);
+ // attack streaks make battle readable as action
+ if((B.t*4|0)%2===0){x.strokeStyle='#e9c56c88';x.lineWidth=2;for(let i=0;i<4;i++){x.beginPath();x.moveTo(w*.48,h*(.38+i*.08));x.lineTo(w*.7,h*(.43+i*.04));x.stroke()}}
+ let col={normal:'#8a5a35',elite:'#3979d5',champion:'#d6ad32',boss:'#a24fd0'}[B.e.tier];
+ x.fillStyle='#1c0e0c';x.fillRect(w*.57,20,w*.36,11);x.fillStyle=col;x.fillRect(w*.57,20,w*.36*Math.max(0,B.enemyHP/B.enemyMax),11);
+ $('battleInfo').innerHTML=`<b>${B.e.name}</b> · ${B.e.tier.toUpperCase()} · HP ${Math.ceil(B.enemyHP)}/${Math.ceil(B.enemyMax)}<br>兵蟻 ${B.army}/${B.armyStart} · ${S.heroes.length} 隻英雄參戰 · 英雄能力 +${Math.round(armyBonus()*100)}%`
+}
 $('egg').onclick=()=>{let c=eggCost();if(S.r<c)return log('主資源不足');S.r-=c;S.chain++;S.lastEgg=performance.now();let w=Math.floor(Math.random()*11);S.w+=w;S.s+=10-w;log(`🥚 工蟻${w}、兵蟻${10-w}`);ui()};
 function buyPoint(c){let cost=3+Math.floor((S.spent-1)/4)*2;if(S.spent>=100)return log('技能點已達100');if(S.x[c]<cost)return log('特化資源不足，需要'+cost);S.x[c]-=cost;S.spent++;S.free[c]++;renderSkills();ui()}
 function add(c,pi,i){let p=pages[c][pi],k=c+':'+p[0]+':'+i,lv=S.sk[k];if(lv>=20||!S.free[c])return;if(i&&(!(S.sk[c+':'+p[0]+':'+(i-1)])||S.spent<p[1][i][1]))return;S.free[c]--;S.sk[k]++;renderSkills();ui()}
-function renderSkills(){$('skilltop').innerHTML=Object.keys(pages).map(c=>`<button onclick="cls='${c}';renderSkills()">${cn[c]} 資源${S.x[c]} 可用點${S.free[c]}</button>`).join('');$('book').innerHTML=`<button onclick="buyPoint('${cls}')">兌換下一技能點 · 需要 ${3+Math.floor((S.spent-1)/4)*2} ${cn[cls]}資源</button><div class="trees">${pages[cls].map((p,pi)=>`<div class="tree"><h3>${p[0]}</h3>${p[1].map((q,i)=>{let lv=S.sk[cls+':'+p[0]+':'+i],lock=i&&(!(S.sk[cls+':'+p[0]+':'+(i-1)])||S.spent<q[1]);return `${i?'<div class=line></div>':''}<button class="node ${lock?'locked':''} ${lv===20?'max':''}" onclick="add('${cls}',${pi},${i})"><b>${q[0]}</b> Lv.${lv}/20<br><span class=muted>${q[2]}${i?' · 需求'+q[1]:''}</span></button>`}).join('')}</div>`).join('')}</div>`}
-function renderHeroes(){$('heroes').innerHTML=S.heroes.map(h=>{let st=heroStats(h);return `<div class="card hero"><h3>🐜 ${h.name} · ${cn[h.c]}英雄</h3><div>Lv.${h.lv} XP ${h.xp} · 兵蟻群體加成 +${Math.round(armyBonus()*100)}%</div><div><b>ATK ${st.atk.toFixed(1)}</b> · HP ${st.hp.toFixed(0)} · CRIT ${st.crit.toFixed(1)} · SPD ${st.spd.toFixed(2)}</div><div class=slots>${['頭盔','胸甲','武器','副手','腰帶','手套','鞋子','護身符','戒指1','戒指2'].map(s=>`<div class=slot>${s}<br>${h.e[s]?h.e[s].name:'—'}</div>`).join('')}</div></div>`}).join('')}
+function renderSkills(){$('skilltop').innerHTML=Object.keys(pages).map(c=>`<button onclick="cls='${c}';renderSkills()">${cn[c]} 資源${S.x[c]} 可用點${S.free[c]}</button>`).join('');$('book').innerHTML=`<button onclick="buyPoint('${cls}')">兌換下一技能點 · 需要 ${3+Math.floor((S.spent-1)/4)*2} ${cn[cls]}資源</button><div class="trees">${pages[cls].map((p,pi)=>`<div class="tree"><h3>${p[0]}</h3>${p[1].map((q,i)=>{let lv=S.sk[cls+':'+p[0]+':'+i],lock=i&&(!(S.sk[cls+':'+p[0]+':'+(i-1)])||S.spent<q[1]);let sn=skillNumbers(q[0],lv);return `${i?'<div class=line></div>':''}<button class="node ${lock?'locked':''} ${lv===20?'max':''}" onclick="add('${cls}',${pi},${i})"><b>${q[0]}</b>　Lv.${lv}/20<br><span>${sn.label} <small>[${sn.typeName}]</small>：<b>+${sn.cur}${sn.suffix}</b>${lv<20?` → 下一級 <b class="good">+${sn.next}${sn.suffix}</b>`:'　MAX'}</span><br><span class=muted>${q[2]}${i?' · 需求總技能 '+q[1]:''}</span></button>`}).join('')}</div>`).join('')}</div>`}
+function gearVisual(h){
+ let marks=[];
+ if(h.e['頭盔'])marks.push('<span class="gearMark gm-head">⛑️</span>');
+ if(h.e['武器'])marks.push('<span class="gearMark gm-weapon">⚔️</span>');
+ if(h.e['胸甲'])marks.push('<span class="gearMark gm-chest">🛡️</span>');
+ if(h.e['護身符'])marks.push('<span class="gearMark gm-amulet">◆</span>');
+ if(h.e['鞋子'])marks.push('<span class="gearMark gm-boots">✦</span>');
+ return `<div class="heroVisual"><div class="heroNameplate">${h.name} · ${cn[h.c]}</div><div class="heroAnt"><i class="seg abd"></i><i class="seg thor"></i><i class="seg head"></i><i class="leg l1"></i><i class="leg l2"></i><i class="leg l3"></i><i class="leg r1"></i><i class="leg r2"></i><i class="leg r3"></i></div>${marks.join('')}</div>`
+}
+function renderHeroes(){$('heroes').innerHTML=S.heroes.map(h=>{let st=heroStats(h);return `<div class="card hero">${gearVisual(h)}<div>Lv.${h.lv} XP ${h.xp} · 兵蟻群體加成 +${Math.round(armyBonus()*100)}%</div><div><b>ATK ${st.atk.toFixed(1)}</b> · HP ${st.hp.toFixed(0)} · CRIT ${st.crit.toFixed(1)} · SPD ${st.spd.toFixed(2)}</div><div class=slots>${['頭盔','胸甲','武器','副手','腰帶','手套','鞋子','護身符','戒指1','戒指2'].map(s=>`<div class=slot>${s}<br>${h.e[s]?h.e[s].name:'—'}</div>`).join('')}</div></div>`}).join('')}
 function renderLoot(){let hero=S.heroes[0],cur=heroStats(hero);$('loot').innerHTML=S.loot.length?S.loot.map((o,i)=>{let after=heroStats(hero,o);return `<div class="card ${o.rar}"><b>${o.name}</b> · ${o.slot}<div>${statText(o)}</div><div class=compare><div>目前<br>ATK ${cur.atk.toFixed(1)} / HP ${cur.hp.toFixed(0)}</div><div class=good>裝備後<br>ATK ${after.atk.toFixed(1)} / HP ${after.hp.toFixed(0)}</div></div>${o.rar==='charm'?'巢穴護符':'<button onclick="equipItem('+i+')">裝備</button>'}</div>`}).join(''):'尚無裝備'}
 function renderPlaces(){$('places').innerHTML=places.map((p,i)=>`<div class=card><h3>${p[0]}</h3><div>${p[3]}</div><div class=rates>${['🌿','🦷','🎯','✨'].map((x,j)=>`<span>${x}${p[2][j]*100}%</span>`).join('')}</div><button ${i===S.loc||S.r<p[1]?'disabled':''} onclick="move(${i})">${i===S.loc?'目前位置':'遷移 🌿'+p[1]}</button></div>`).join('')}
-function move(i){if(S.r<places[i][1])return;S.r-=places[i][1];S.loc=i;S.vis=32+i*7;ents=[];for(let n=0;n<14;n++)spawn();log('🪹 遷移到'+places[i][0]);ui()}
-function ui(){let p=places[S.loc];$('r0').textContent=Math.floor(S.r);$('r1').textContent=S.x.melee;$('r2').textContent=S.x.range;$('r3').textContent=S.x.magic;$('pop').textContent=S.w+S.s+1;$('sp').textContent=S.spent;$('w').textContent=S.w;$('s').textContent=S.s;$('ec').textContent=eggCost();$('pn').textContent=p[0];$('vis').textContent=S.vis;for(let i=0;i<4;i++)$('pp'+i).textContent=['🌿','🦷','🎯','✨'][i]+Math.round(p[2][i]*100)+'%';$('stats').innerHTML=`<div class=card><h3>工蟻 ${S.w}</h3>自動主資源 +${(S.w*.045).toFixed(2)}/秒</div><div class=card><h3>兵蟻 ${S.s}</h3>提高戰鬥群體能力</div><div class=card><h3>擊殺 ${S.kills}</h3>英雄 ${S.heroes.length}/3</div>`}
+function move(i){if(S.r<places[i][1])return;S.r-=places[i][1];S.loc=i;S.vis=currentVision();ents=[];for(let n=0;n<14;n++)spawn();log('🪹 遷移到'+places[i][0]);ui()}
+function currentVision(){
+ let pop=S.w+S.s+1;
+ let populationVision=Math.min(38,Math.log2(Math.max(1,pop/10))*7);
+ return Math.min(78,32+S.loc*5+populationVision)
+}
+function ui(){S.vis=currentVision();let p=places[S.loc];$('r0').textContent=Math.floor(S.r);$('r1').textContent=S.x.melee;$('r2').textContent=S.x.range;$('r3').textContent=S.x.magic;$('pop').textContent=S.w+S.s+1;$('sp').textContent=S.spent;$('w').textContent=S.w;$('s').textContent=S.s;$('ec').textContent=eggCost();$('pn').textContent=p[0];$('vis').textContent=S.vis;for(let i=0;i<4;i++)$('pp'+i).textContent=['🌿','🦷','🎯','✨'][i]+Math.round(p[2][i]*100)+'%';$('stats').innerHTML=`<div class=card><h3>工蟻 ${S.w}</h3>自動主資源 +${(S.w*.045).toFixed(2)}/秒</div><div class=card><h3>兵蟻 ${S.s}</h3>提高戰鬥群體能力</div><div class=card><h3>擊殺 ${S.kills}</h3>英雄 ${S.heroes.length}/3</div>`}
 function draw(){let c=$('world'),d=Math.min(2,devicePixelRatio||1),w=c.clientWidth,h=c.clientHeight;if(c.width!=w*d||c.height!=h*d){c.width=w*d;c.height=h*d}let x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);let g=x.createRadialGradient(w/2,h/2,10,w/2,h/2,Math.min(w,h)*.6);g.addColorStop(0,'#40502d');g.addColorStop(1,'#080b07');x.fillStyle=g;x.fillRect(0,0,w,h);x.fillStyle='#382619';x.beginPath();x.arc(w/2,h/2,26,0,7);x.fill();x.fillStyle='#d9b96e';x.font='22px sans-serif';x.fillText('♛',w/2-10,h/2+7);ents.forEach(e=>{let px=e.x*w/100,py=e.y*h/100;if(!e.cr){x.shadowBlur=12;x.shadowColor='#b9ff78';x.fillStyle='#b6dc6c';x.beginPath();x.ellipse(px,py,7,4,-.5,0,7);x.fill();x.shadowBlur=0}else{x.fillStyle={normal:'#4d2819',elite:'#3979d5',champion:'#d6ad32',boss:'#a24fd0'}[e.tier]||'#4d2819';x.strokeStyle=e.tier==='boss'?'#f1b6ff':'#c48e57';x.beginPath();x.ellipse(px,py,12,7,0,0,7);x.fill();x.stroke();for(let j=-1;j<2;j++){x.beginPath();x.moveTo(px-4,py+j*4);x.lineTo(px-15,py+j*7);x.stroke();x.beginPath();x.moveTo(px+4,py+j*4);x.lineTo(px+15,py+j*7);x.stroke()}}})}
 $('world').onclick=e=>{let r=e.target.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width*100,my=(e.clientY-r.top)/r.height*100;if(Math.hypot(mx-50,my-50)>S.vis*.75)return log('🌫️ 迷霧之外無法採集或戰鬥');let b=null,bd=5;ents.forEach(q=>{let d=Math.hypot(q.x-mx,q.y-my);if(d<bd){b=q;bd=d}});if(!b)return;if(b.cr)startBattle(b);else{roll();ents=ents.filter(q=>q!==b);spawn();log('✋ 手動拾取資源');ui()}};
 document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));$(b.dataset.p).classList.add('on');if(b.dataset.p==='skillPage')renderSkills();if(b.dataset.p==='heroPage')renderHeroes();if(b.dataset.p==='lootPage')renderLoot();if(b.dataset.p==='movePage')renderPlaces();ui()});
